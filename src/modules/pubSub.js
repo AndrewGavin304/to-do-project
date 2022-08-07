@@ -1,12 +1,12 @@
 export function pubSub() {
   const events = {};
 
-  function subscribe(eventName, callback) {
+  function sub(eventName, callback) {
     events[eventName] = events[eventName] || [];
     events[eventName].push(callback);
   }
 
-  function publish(eventName, data) {
+  function pub(eventName, data) {
     if (events[eventName]) {
       events[eventName].forEach(f => {
         f(data);
@@ -14,15 +14,15 @@ export function pubSub() {
     }
   }
 
-  function unsubscribe(eventName, callback) {
+  function unsub(eventName, callback) {
     if (events[eventName]){
       events[eventName] = events[eventName].filter(f => f !== callback);
     }
   }
 
   return {
-    subscribe, 
-    publish,
-    unsubscribe
+    sub, 
+    pub,
+    unsub
   }
 }
