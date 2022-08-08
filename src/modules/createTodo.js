@@ -1,6 +1,6 @@
 export const createTodo = ({
   title = 'Todo Item',
-  description = 'Description',
+  description = undefined,
   dueDate = undefined,
   priority = 'medium',
   notes = undefined,
