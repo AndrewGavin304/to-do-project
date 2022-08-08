@@ -1,4 +1,11 @@
+import { pubSub } from "./pubSub";
+
 export const domController = (function () {
+  
+  function listen(){
+    console.log("addToDom wants to know when todo is added for addToList");
+    pubSub.sub('todo', addToDom);
+  }
   
   function createListContainer(){
     let listContainer = document.createElement("div");
@@ -41,6 +48,7 @@ export const domController = (function () {
   return {
     createListContainer,
     generateDomItem,
-    addToDom
+    addToDom,
+    listen
   }
 })()

@@ -4,8 +4,7 @@ import { todoListController } from "./modules/todoController";
 import { domController } from "./modules/domController";
 
 domController.createListContainer();
-todoListController();
-console.log("addToDom wants to know when todo is added for todoAdded");
-pubSub.sub('todo', domController.addToDom);
+domController.listen();
+todoListController.listen();
 pubSub.pub('todo', createTodo({title: 'noob'}))
 pubSub.pub('todo', createTodo({title: 'choob', priority: 'high'}))
