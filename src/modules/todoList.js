@@ -1,10 +1,13 @@
-import { pubSub } from "./pubSub"
+import { pubSub }from "./pubSub"
+import { createTodo } from "./createTodo";
 
 export function todoList() {
   const list = [];
-  function watch(){
-    pubSub.sub('todoAdded', todoAdded)
-  }
+  
+  console.log("todoList wants to know when todo is added");
+  pubSub.sub('todo', todoAdded);
 
-  function todoAdded();
+  function todoAdded(data){
+    console.log(data + "fff")
+  }
 }
