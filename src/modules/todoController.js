@@ -1,10 +1,11 @@
 import { pubSub }from "./pubSub"
 
+
 export const todoListController = (function () {
   const list = [];
   
   function listen(){
-    console.log("addToListArray wants to know when todo is added for addToList");
+    console.log("todoListener started");
     pubSub.sub('todo', addToListArray);
   }
 

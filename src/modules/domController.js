@@ -3,7 +3,7 @@ import { pubSub } from "./pubSub";
 export const domController = (function () {
   
   function listen(){
-    console.log("addToDom wants to know when todo is added for addToList");
+    console.log("addToDom listener started");
     pubSub.sub('todo', addToDom);
   }
   
@@ -22,6 +22,9 @@ export const domController = (function () {
 
       if (key == 'priority') {
         itemDiv.className = `list-container__item_${value}-priority`
+      }
+
+      else if (key == 'uuid') {
       }
 
       else if (value){

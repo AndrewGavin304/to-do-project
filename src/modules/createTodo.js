@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const createTodo = ({
   title = 'Todo Item',
   description = undefined,
@@ -5,7 +7,8 @@ export const createTodo = ({
   priority = 'medium',
   notes = undefined,
   checklist = undefined,
-  project = undefined
+  project = undefined,
+  uuid = uuidv4()
 } = {}) => ({
   title,
   description,
@@ -13,5 +16,6 @@ export const createTodo = ({
   priority,
   notes,
   checklist,
-  project
+  project,
+  uuid
 })
