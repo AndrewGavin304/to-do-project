@@ -1,3 +1,4 @@
+import "./sass/app.scss";
 import { pubSub } from "./modules/pubSub";
 import { createTodo } from "./modules/createTodo";
 import { todoListController } from "./modules/todoController";
