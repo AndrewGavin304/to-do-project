@@ -1,5 +1,4 @@
 import { pubSub } from "./pubSub";
-
 export const domController = (function () {
   
   function listen(){
@@ -14,7 +13,7 @@ export const domController = (function () {
     for (const [key, value] of Object.entries(data)) {
 
       if (key == 'priority') {
-        itemDiv.className = `list-container__item_${value}-priority`
+        itemDiv.className = `list-container__item_priority_${value}`
       }
 
       else if (key == 'uuid') {
@@ -51,8 +50,63 @@ export const domController = (function () {
     let navbar = document.createElement("div");
     navbar.className = "navbar";
     navbar.setAttribute('id', 'navbar');
+
+    navbar.appendChild(_searchbar());
+    navbar.appendChild(_createNameDisplay());
+    navbar.appendChild(_createProfilePicture());
+    // navbar.appendChild(settingsIcon);
     content.appendChild(navbar);
+
+    function _createNameDisplay() {
+      let nameButton = document.createElement("button");
+      nameButton.className = "navbar__name";
+      nameButton.setAttribute('id', 'navbar__name');
+      nameButton.textContent = "Andrew Gavin";
+      return nameButton;
+    }
+
+    function _createProfilePicture() {
+      //check index.html for Jdenticon config
+      let pfpButton = document.createElement("button");
+      pfpButton.classList.add("navbar__profile-picture-button");
+      pfpButton.setAttribute('id', "navbar__profile-picture-button");
+
+      let pfp = document.createElement("canvas");
+      pfp.className = "navbar__profile-picture";
+      pfp.setAttribute('width', '44');
+      pfp.setAttribute('height', '44');
+      pfp.setAttribute('data-jdenticon-value', 'AndrewGavin');
+
+      pfpButton.appendChild(pfp);
+
+      return pfpButton;
+    }
+
+    // let settingsIcon = document.createElement("span");
+    // settingsIcon.classList.add("material-symbols-outlined", "navbar__settings-icon");
+    // settingsIcon.textContent = "settings";
+
+    function _searchbar(){
+    let searchbar = document.createElement("form");
+    searchbar.className = "searchbar";
+
+    let searchbarInput = document.createElement("input");
+    searchbarInput.className = "searchbar__input";
+    searchbarInput.setAttribute('type', 'search');
+    searchbarInput.setAttribute('id', 'search');
+    searchbarInput.setAttribute('autocomplete', 'off');
+
+    let searchbarIcon = document.createElement("span");
+    searchbarIcon.className = "material-symbols-outlined";
+    searchbarIcon.textContent = "search";
+
+    searchbar.appendChild(searchbarIcon);
+    searchbar.appendChild(searchbarInput);
+    return searchbar;
+    }
   }
+
+
 
   function _sidebar(){
     let sidebar = document.createElement("div");

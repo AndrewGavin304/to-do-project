@@ -7,5 +7,11 @@ import { domController } from "./modules/domController";
 domController.generateBaseLayout();
 domController.listen();
 todoListController.listen();
-pubSub.pub('todo', createTodo({title: 'noob'}))
-pubSub.pub('todo', createTodo({title: 'choob', priority: 'high'}))
+
+let pfpButton = document.getElementById("navbar__profile-picture-button");
+pfpButton.addEventListener('click', () => {
+  console.log("i'm a dumb button")
+
+})
+// pubSub.pub('todo', createTodo({title: 'noob'}))
+// pubSub.pub('todo', createTodo({title: 'choob', priority: 'high'}))

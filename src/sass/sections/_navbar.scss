@@ -1,0 +1,51 @@
+.navbar{
+    @include flex-center;
+    grid-row: 1;
+    grid-column: 1 / -1;
+    background-color: $primary;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 4px;
+
+    &__profile-picture-button {
+        border-radius: 50%;
+        border: none;
+        padding: 4px;
+        width: 50px;
+        height: 50px;
+    }
+
+    &__profile-picture {
+        max-height: 100%; 
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    &__name {
+        background: none;
+        border: none;
+        color: $white;
+    }
+
+}
+
+.searchbar {
+    @include flex-center;
+    background-color: $white;
+    width: 25vw;
+    border-radius: $base-border-radius-quarter;
+    padding: 2px;
+    margin-right: auto;
+    margin-left: auto;
+
+    &__input{
+        border: none;
+        width: 25vw;
+        background-color: $white;
+    
+        &:focus{
+            outline: none;
+            caret-color: $primary;
+        }
+    }
+}

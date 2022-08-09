@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "css-loader": "^6.7.1",
+    "jdenticon": "^3.2.0",
     "material-symbols": "^0.2.7",
     "style-loader": "^3.3.1",
     "uuid": "^8.3.2"
