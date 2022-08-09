@@ -3,7 +3,7 @@ import { createTodo } from "./modules/createTodo";
 import { todoListController } from "./modules/todoController";
 import { domController } from "./modules/domController";
 
-domController.createListContainer();
+domController.generateBaseLayout();
 domController.listen();
 todoListController.listen();
 pubSub.pub('todo', createTodo({title: 'noob'}))

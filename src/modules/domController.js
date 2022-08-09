@@ -6,15 +6,8 @@ export const domController = (function () {
     console.log("addToDom listener started");
     pubSub.sub('todo', addToDom);
   }
-  
-  function createListContainer(){
-    let listContainer = document.createElement("div");
-    listContainer.className = "list-container";
-    listContainer.setAttribute('id', 'list-container');
-    content.appendChild(listContainer);
-  }
 
-  function generateDomItem(data){
+  function generateDomListItem(data){
     const itemDiv = document.createElement("div");
     itemDiv.className = "list-container__item";
 
@@ -45,13 +38,39 @@ export const domController = (function () {
   function addToDom(data){
     let listContainer = document.getElementById("list-container");
     console.log(`addToDom received ${data}`)
-    listContainer.appendChild(generateDomItem(data));
+    listContainer.appendChild(generateDomListItem(data));
+  }
+
+  function generateBaseLayout(){
+    _navbar();
+    _sidebar();
+    _listContainer();
+  }
+
+  function _navbar(){
+    let navbar = document.createElement("div");
+    navbar.className = "navbar";
+    navbar.setAttribute('id', 'navbar');
+    content.appendChild(navbar);
+  }
+
+  function _sidebar(){
+    let sidebar = document.createElement("div");
+    sidebar.className = "sidebar";
+    sidebar.setAttribute('id', 'sidebar');
+    content.appendChild(sidebar);
+  }
+
+  function _listContainer(){
+    let listContainer = document.createElement("div");
+    listContainer.className = "list-container";
+    listContainer.setAttribute('id', 'list-container');
+    content.appendChild(listContainer);
   }
 
   return {
-    createListContainer,
-    generateDomItem,
     addToDom,
-    listen
+    listen,
+    generateBaseLayout
   }
 })()
