@@ -1,5 +1,7 @@
 // Abstract files
 @import "abstracts/all";
+$material-symbols-font-path: '~material-symbols/';
+@import 'material-symbols';
 
 // Core files
 @import "core/all";
