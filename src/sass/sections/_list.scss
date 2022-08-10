@@ -1,0 +1,70 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    grid-template: 1.5rem / 1fr;
+    grid-auto-rows: 1.5rem;
+    padding: 1rem 2rem;
+    margin: 2rem 12rem;
+
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+
+    &__header {
+        display: flex;
+        font-family: $header-font-family;
+        font-size: 1.2rem;
+    }
+
+    &:not(__header) {
+        font-weight: 300;
+        font-size: .8rem;
+
+    }
+}
+
+.add-todo-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    border: 2px solid $accent-lighter;
+    border-radius: $base-border-radius-half;
+    color: $accent;
+    font-size: 1.1rem;
+    transition: .2s;
+
+    &:hover {
+        background-color: $accent-lighter;
+    }
+
+    &_hide {
+        display: none;
+    }
+
+    &_show {
+        display: flex;
+    }
+}
+
+.add-todo-form {
+    &_hide {
+        display: none;
+    }
+
+    &_show {
+        grid-column: 1 / 3;
+        display: grid;
+    }
+}
+
+.list-container__item {
+
+    // &-due-date{
+    //     margin-left: auto;
+    // }
+}

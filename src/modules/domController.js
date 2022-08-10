@@ -1,19 +1,44 @@
+import { createTodo } from "./createTodo";
 import { pubSub } from "./pubSub";
+
 export const domController = (function () {
   
   function listen(){
-    console.log("addToDom listener started");
-    pubSub.sub('todo', addToDom);
+    console.log("addListItemToDom listener started");
+    pubSub.sub('todo', addListItemToDom);
   }
 
   function generateDomListItem(data){
     const itemDiv = document.createElement("div");
-    itemDiv.className = "list-container__item";
+    itemDiv.classList.add("list-container__item");
 
     for (const [key, value] of Object.entries(data)) {
 
-      if (key == 'priority') {
-        itemDiv.className = `list-container__item_priority_${value}`
+      if (key == 'title') {
+        var headerDiv = document.createElement("div");
+        headerDiv.classList.add("list-container__header");
+
+        let span = document.createElement("span");
+        span.textContent = `${value}`;
+        span.classList.add(`list-container__item-${key}`)
+
+        headerDiv.append(span);
+        itemDiv.append(headerDiv);
+      }
+
+      // Currently unused but useful - adds an element to be horizontally
+      // in line with another list item
+      // 
+      // else if (key == 'dueDate' && value) {
+      //   let span = document.createElement("span");
+      //   span.textContent = `${value}`;
+      //   span.classList.add("list-container__item-due-date")
+
+      //   headerDiv.append(span);
+      // }
+
+      else if (key == 'priority') {
+        itemDiv.classList.add(`list-container__item_priority_${value}`)
       }
 
       else if (key == 'uuid') {
@@ -21,45 +46,46 @@ export const domController = (function () {
 
       else if (value){
         let div = document.createElement("div");
-        div.className = `list-container__${key}`;
+        div.classList.add(`list-container__${key}`);
 
         let span = document.createElement("span");
         span.textContent = `${value}`;
+        span.classList.add(`list-container__item-${key}`)
 
-        div.appendChild(span);
-        itemDiv.appendChild(div);
+        div.append(span);
+        itemDiv.append(div);
       }
     }
 
     return itemDiv;
   }
 
-  function addToDom(data){
+  function addListItemToDom(data){
     let listContainer = document.getElementById("list-container");
-    console.log(`addToDom received ${data}`)
-    listContainer.appendChild(generateDomListItem(data));
+    console.log(`addListItemToDom received ${data}`)
+    listContainer.append(generateDomListItem(data));
   }
 
-  function generateBaseLayout(){
+  function generateHomeLayout(){
     _navbar();
     _sidebar();
-    _listContainer();
+    _homeView();
   }
 
   function _navbar(){
     let navbar = document.createElement("div");
-    navbar.className = "navbar";
+    navbar.classList.add("navbar");
     navbar.setAttribute('id', 'navbar');
 
-    navbar.appendChild(_searchbar());
-    navbar.appendChild(_createNameDisplay());
-    navbar.appendChild(_createProfilePicture());
-    // navbar.appendChild(settingsIcon);
-    content.appendChild(navbar);
+    navbar.append(_searchbar());
+    navbar.append(_createNameDisplay());
+    navbar.append(_createProfilePicture());
+    // navbar.append(settingsIcon);
+    content.append(navbar);
 
     function _createNameDisplay() {
       let nameButton = document.createElement("button");
-      nameButton.className = "navbar__name";
+      nameButton.classList.add("navbar__name", "btn");
       nameButton.setAttribute('id', 'navbar__name');
       nameButton.textContent = "Andrew Gavin";
       return nameButton;
@@ -68,16 +94,16 @@ export const domController = (function () {
     function _createProfilePicture() {
       //check index.html for Jdenticon config
       let pfpButton = document.createElement("button");
-      pfpButton.classList.add("navbar__profile-picture-button");
+      pfpButton.classList.add("navbar__profile-picture-button", "btn");
       pfpButton.setAttribute('id', "navbar__profile-picture-button");
 
       let pfp = document.createElement("canvas");
-      pfp.className = "navbar__profile-picture";
+      pfp.classList.add("navbar__profile-picture");
       pfp.setAttribute('width', '44');
       pfp.setAttribute('height', '44');
-      pfp.setAttribute('data-jdenticon-value', 'AndrewGavin');
+      pfp.setAttribute('data-jdenticon-value', 'AndrewG');
 
-      pfpButton.appendChild(pfp);
+      pfpButton.append(pfp);
 
       return pfpButton;
     }
@@ -88,43 +114,110 @@ export const domController = (function () {
 
     function _searchbar(){
     let searchbar = document.createElement("form");
-    searchbar.className = "searchbar";
+    searchbar.classList.add("searchbar");
 
     let searchbarInput = document.createElement("input");
-    searchbarInput.className = "searchbar__input";
+    searchbarInput.classList.add("searchbar__input");
     searchbarInput.setAttribute('type', 'search');
     searchbarInput.setAttribute('id', 'search');
     searchbarInput.setAttribute('autocomplete', 'off');
 
     let searchbarIcon = document.createElement("span");
-    searchbarIcon.className = "material-symbols-outlined";
+    searchbarIcon.classList.add("material-symbols-outlined");
     searchbarIcon.textContent = "search";
 
-    searchbar.appendChild(searchbarIcon);
-    searchbar.appendChild(searchbarInput);
+    searchbar.append(searchbarIcon);
+    searchbar.append(searchbarInput);
     return searchbar;
     }
   }
 
-
-
   function _sidebar(){
     let sidebar = document.createElement("div");
-    sidebar.className = "sidebar";
+    sidebar.classList.add("sidebar");
     sidebar.setAttribute('id', 'sidebar');
-    content.appendChild(sidebar);
+    content.append(sidebar);
   }
 
   function _listContainer(){
     let listContainer = document.createElement("div");
-    listContainer.className = "list-container";
+    listContainer.classList.add("list-container");
     listContainer.setAttribute('id', 'list-container');
-    content.appendChild(listContainer);
+    return listContainer;
+  }
+
+  function _addTodoButton(){
+    let addTodoButton = document.createElement("button");
+    let addTodoButtonIcon = document.createElement("span");
+    let addTodoButtonText = document.createElement("span");
+
+    addTodoButton.classList.add("add-todo-button", "btn");
+    addTodoButton.setAttribute('id', 'add-todo-button');
+
+    addTodoButtonIcon.classList.add("material-symbols-outlined", "add-todo-button__icon");
+    addTodoButtonIcon.append("add");
+
+    addTodoButtonText.textContent = "Add Todo";
+    addTodoButtonText.classList.add("add-todo-button__text")
+
+    addTodoButton.append(addTodoButtonIcon);
+    addTodoButton.append(addTodoButtonText);
+
+    return addTodoButton;
+  }
+
+  function _addTodoForm(){
+    let form = document.createElement("form");
+    form.setAttribute('id', 'add-todo-form');
+    form.classList.add("add-todo-form_hide");
+
+    //used to generate form
+    const templateTodo = createTodo();
+
+    for (const [key] of Object.entries(templateTodo)) {
+      let label = document.createElement("label");
+      let input = document.createElement("input");
+
+      label.setAttribute("for", `${key}`);
+      input.setAttribute("type", "text");
+      input.setAttribute("id", `${key}`);
+
+      //replaces key camelCase to Title Case (eg dueDate to Due Date)
+      let keyStr = `${key}`
+      keyStr = keyStr.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
+      label.append(keyStr);
+
+      form.append(label);
+      form.append(input);
+    }
+
+    let submit = document.createElement("button");
+    submit.setAttribute('type', 'button');
+    submit.setAttribute('onclick', pubSub.pub('todo', createTodo(_getFormData())))
+    submit.textContent = "Add";
+    form.append(submit);
+
+    return form;
+  }
+
+  function _homeView(){
+    var homeView = document.createElement("div");
+    homeView.classList.add("home-container");
+
+    homeView.append(_listContainer());
+    homeView.append(_addTodoButton());
+    homeView.append(_addTodoForm());
+    content.append(homeView);
+  }
+
+  function _getFormData(){
+    let form = document.getElementById("add-todo-form");
+    // const inputs = form.elements;
   }
 
   return {
-    addToDom,
+    addListItemToDom,
     listen,
-    generateBaseLayout
+    generateHomeLayout
   }
 })()
