@@ -191,7 +191,7 @@ function _addTodoForm(){
 
   let submit = document.createElement("button");
   submit.setAttribute('type', 'button');
-  submit.setAttribute('onclick', pubSub.pub('todo', createTodo(_getFormData())))
+  submit.setAttribute('id', 'add-todo-form__submit')
   submit.textContent = "Add";
   form.append(submit);
 
@@ -208,15 +208,10 @@ function _homeView(){
   content.append(homeView);
 }
 
-function _getFormData(){
-  let form = document.getElementById("add-todo-form");
-  // const inputs = form.elements;
-}
-
-export function addTodoListener(){
-let addTodoButton = document.getElementById("add-todo-button");
-addTodoButton.addEventListener('click', () => {
-  const addTodoForm = document.getElementById('add-todo-form');
+export function clickAddTodoListener(){
+  let addTodoButton = document.getElementById("add-todo-button");
+  addTodoButton.addEventListener('click', () => {
+    const addTodoForm = document.getElementById('add-todo-form');
 
     if (addTodoForm.classList.contains('add-todo-form_hide')) {
       addTodoForm.classList.remove('add-todo-form_hide');
@@ -224,7 +219,7 @@ addTodoButton.addEventListener('click', () => {
       addTodoButton.classList.remove('add-todo-button_show');
       addTodoButton.classList.add('add-todo-button_hide');
     } 
-    
+      
     else {
       addTodoForm.classList.remove('add-todo-form_show');
       addTodoForm.classList.add('add-todo-form_hide');
@@ -232,4 +227,23 @@ addTodoButton.addEventListener('click', () => {
       addTodoButton.classList.add('add-todo-button_hide');
     }
   })
+}
+
+function _convertFormDataToObj(){
+  const inputs = document.querySelectorAll('#add-todo-form input');
+  let todoObj = createTodo();
+
+  inputs.forEach(input => {
+    if (input.value){
+    todoObj[input.id] = input.value;
+    }
+  })
+
+  return todoObj;
+}
+
+export function clickSubmitTodoListener() {
+  let submit = document.getElementById("add-todo-form__submit");
+  submit.addEventListener('click', function() {pubSub.pub('todo', _convertFormDataToObj())});
+  // submit.addEventListener('click', )
 }

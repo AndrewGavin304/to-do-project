@@ -1,12 +1,12 @@
 import "./sass/app.scss";
 import { pubSub } from "./modules/pubSub";
 import { createTodo } from "./modules/createTodo";
-import { generateHomeLayout } from "./modules/domManipulation";
-import { listen as domListen, addTodoListener } from "./modules/domManipulation";
+import { listen as domListen, clickAddTodoListener, generateHomeLayout, clickSubmitTodoListener} from "./modules/domManipulation";
 import { listen as listListen } from "./modules/todoController";
 
 generateHomeLayout();
-addTodoListener();
+clickAddTodoListener();
+clickSubmitTodoListener();
 domListen();
 listListen();
 
