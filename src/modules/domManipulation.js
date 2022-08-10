@@ -149,7 +149,7 @@ function _addTodoButton(){
   let addTodoButtonIcon = document.createElement("span");
   let addTodoButtonText = document.createElement("span");
 
-  addTodoButton.classList.add("add-todo-button", "btn");
+  addTodoButton.classList.add("add-todo-button_show", "btn");
   addTodoButton.setAttribute('id', 'add-todo-button');
 
   addTodoButtonIcon.classList.add("material-symbols-outlined", "add-todo-button__icon");
@@ -210,23 +210,38 @@ function _homeView(){
 
 export function clickAddTodoListener(){
   let addTodoButton = document.getElementById("add-todo-button");
-  addTodoButton.addEventListener('click', () => {
-    const addTodoForm = document.getElementById('add-todo-form');
+  addTodoButton.addEventListener('click', function() {_toggleAddTodoButton()})
+  addTodoButton.addEventListener('click', function() {_toggleAddTodoForm()})
+}
 
-    if (addTodoForm.classList.contains('add-todo-form_hide')) {
-      addTodoForm.classList.remove('add-todo-form_hide');
-      addTodoForm.classList.add('add-todo-form_show');
-      addTodoButton.classList.remove('add-todo-button_show');
-      addTodoButton.classList.add('add-todo-button_hide');
-    } 
-      
-    else {
-      addTodoForm.classList.remove('add-todo-form_show');
-      addTodoForm.classList.add('add-todo-form_hide');
-      addTodoButton.classList.remove('add-todo-button_show');
-      addTodoButton.classList.add('add-todo-button_hide');
-    }
-  })
+
+function _toggleAddTodoButton(){
+  const addTodoButton = document.getElementById("add-todo-button");
+  
+  if (addTodoButton.classList.contains("add-todo-button_show")){
+    addTodoButton.classList.remove('add-todo-button_show');
+    addTodoButton.classList.add('add-todo-button_hide');
+  }
+
+  else{
+    addTodoButton.classList.remove('add-todo-button_hide');
+    addTodoButton.classList.add('add-todo-button_show');
+  }
+
+}
+
+function _toggleAddTodoForm(){
+  const addTodoForm = document.getElementById('add-todo-form');
+
+  if (addTodoForm.classList.contains('add-todo-form_hide')){
+    addTodoForm.classList.remove('add-todo-form_hide');
+    addTodoForm.classList.add('add-todo-form_show');
+  } 
+    
+  else {
+    addTodoForm.classList.remove('add-todo-form_show');
+    addTodoForm.classList.add('add-todo-form_hide');
+  }
 }
 
 function _convertFormDataToObj(){
@@ -245,5 +260,6 @@ function _convertFormDataToObj(){
 export function clickSubmitTodoListener() {
   let submit = document.getElementById("add-todo-form__submit");
   submit.addEventListener('click', function() {pubSub.pub('todo', _convertFormDataToObj())});
-  // submit.addEventListener('click', )
+  submit.addEventListener('click', function() {_toggleAddTodoButton()})
+  submit.addEventListener('click', function() {_toggleAddTodoForm()})
 }
