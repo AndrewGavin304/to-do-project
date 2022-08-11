@@ -28,6 +28,7 @@ function _generateDomListItem(data){
       itemDiv.append(headerDiv);
     }
 
+    // !!MARKED FOR REMOVAL!!
     // Currently unused but useful - adds an element to be horizontally
     // in line with another list item
     // 
@@ -175,6 +176,10 @@ function _generateOptions(key, array){
     let option = document.createElement('option');
     option.value = `${e}`
     option.text = `${e}`[0].toUpperCase() + `${e}`.slice(1);
+
+    if (option.value == 'medium'){
+      option.setAttribute('selected', 'selected');
+    }
     select.append(option);
   });
 
@@ -204,7 +209,8 @@ function _addTodoForm(){
     
     if (`${key}` == 'priority'){
       form.append(label);
-      form.append(_generateOptions(`${key}`, priorities));
+      let options = _generateOptions(`${key}`, priorities);
+      form.append(options);
       continue;
     }
 
