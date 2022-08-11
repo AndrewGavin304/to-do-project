@@ -1,5 +1,6 @@
-import { createTodo } from "./createTodo";
+import { createTodo } from "./todoController";
 import { pubSub } from "./pubSub";
+import { convertFormDataToObj } from "./todoController";
 
 let projectList = ['default']
 let priorities = ['low', 'medium', 'high']
@@ -282,22 +283,9 @@ function _toggleAddTodoForm(){
   }
 }
 
-function _convertFormDataToObj(){
-  const inputs = document.querySelectorAll('#add-todo-form input');
-  let todoObj = createTodo();
-
-  inputs.forEach(input => {
-    if (input.value){
-    todoObj[input.id] = input.value;
-    }
-  })
-
-  return todoObj;
-}
-
 export function clickSubmitTodoListener() {
   let submit = document.getElementById("add-todo-form__submit");
-  submit.addEventListener('click', function() {pubSub.pub('todo', _convertFormDataToObj())});
+  submit.addEventListener('click', function() {pubSub.pub('todo', convertFormDataToObj())});
   submit.addEventListener('click', function() {_toggleAddTodoButton()})
   submit.addEventListener('click', function() {_toggleAddTodoForm()})
 }
