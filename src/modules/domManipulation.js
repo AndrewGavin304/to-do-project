@@ -1,7 +1,7 @@
 import { createTodo } from "./createTodo";
 import { pubSub } from "./pubSub";
 
-let projectList = []
+let projectList = ['default']
 let priorities = ['low', 'medium', 'high']
 
 export function listen(){
@@ -9,7 +9,7 @@ export function listen(){
   pubSub.sub('todo', addListItemToDom);
 }
 
-function generateDomListItem(data){
+function _generateDomListItem(data){
   const itemDiv = document.createElement("div");
   itemDiv.classList.add("list-container__item");
 
@@ -64,7 +64,7 @@ function generateDomListItem(data){
 function addListItemToDom(data){
   let listContainer = document.getElementById("list-container");
   console.log(`addListItemToDom received ${data}`)
-  listContainer.append(generateDomListItem(data));
+  listContainer.append(_generateDomListItem(data));
 }
 
 export function generateHomeLayout(){
@@ -167,8 +167,18 @@ function _addTodoButton(){
   return addTodoButton;
 }
 
-function _generateOptions(array){
-  
+function _generateOptions(key, array){
+  let select = document.createElement('select');
+
+  array.forEach(e => {
+    let option = document.createElement('option');
+    option.value = `${e}`
+    option.text = `${e}`[0].toUpperCase() + `${e}`.slice(1);
+    select.append(option);
+  });
+
+  select.setAttribute("id", `${key}`)
+  return select;
 }
 
 function _addTodoForm(){
@@ -192,18 +202,14 @@ function _addTodoForm(){
     label.append(keyStr);
     
     if (`${key}` == 'priority'){
-      let select = document.createElement('select');
-
-      priorities.forEach(e => {
-        let priority = document.createElement('option');
-        priority.value = `${e}`
-        priority.text = `${e}`[0].toUpperCase() + `${e}`.slice(1);
-        select.append(priority);
-      });
-
       form.append(label);
-      form.append(select);
-      select.setAttribute("id", `${key}`)
+      form.append(_generateOptions(`${key}`, priorities));
+      continue;
+    }
+
+    else if (`${key}` == 'project'){
+      form.append(label);
+      form.append(_generateOptions(`${key}`, projectList));
       continue;
     }
 
@@ -211,12 +217,9 @@ function _addTodoForm(){
       input.setAttribute('type', 'datetime-local');
     }
 
-    else if (`${key}` == 'project'){
-      let select = document.createElement('select');
-    }
-
     else {
       input.setAttribute("type", "text");
+      input.setAttribute('autocomplete', 'off');
     }
 
     form.append(label);
