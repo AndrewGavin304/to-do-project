@@ -2,6 +2,7 @@ import { createTodo } from "./createTodo";
 import { pubSub } from "./pubSub";
 
 let projectList = []
+let priorities = ['low', 'medium', 'high']
 
 export function listen(){
   console.log("addListItemToDom listener started");
@@ -166,6 +167,10 @@ function _addTodoButton(){
   return addTodoButton;
 }
 
+function _generateOptions(array){
+  
+}
+
 function _addTodoForm(){
   let form = document.createElement("form");
   form.setAttribute('id', 'add-todo-form');
@@ -188,21 +193,14 @@ function _addTodoForm(){
     
     if (`${key}` == 'priority'){
       let select = document.createElement('select');
-      let lowprio = document.createElement('option');
-      let mediumprio = document.createElement('option');
-      let highprio = document.createElement('option');
 
-      lowprio.value = 'low';
-      mediumprio.value = 'medium';
-      highprio.value = 'high';
+      priorities.forEach(e => {
+        let priority = document.createElement('option');
+        priority.value = `${e}`
+        priority.text = `${e}`[0].toUpperCase() + `${e}`.slice(1);
+        select.append(priority);
+      });
 
-      lowprio.text = 'Low';
-      mediumprio.text = 'Medium';
-      highprio.text = 'High';
-
-      select.append(lowprio);
-      select.append(mediumprio);
-      select.append(highprio);
       form.append(label);
       form.append(select);
       select.setAttribute("id", `${key}`)
@@ -214,7 +212,7 @@ function _addTodoForm(){
     }
 
     else if (`${key}` == 'project'){
-      
+      let select = document.createElement('select');
     }
 
     else {
