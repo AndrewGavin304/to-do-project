@@ -9,22 +9,24 @@ $secondary-light: lighten($secondary, 10);
 $secondary-lighter: lighten($secondary, 20);
 $secondary-dark: darken($secondary, 10);
 $secondary-darker: darken($secondary, 20);
+$secondary-darkest: darken($secondary, 30);
 
 $white: hsla(195, 50%, 95%, 1);
 $white-dark: darken($white, 5);
 $white-darker: darken($white, 10);
 
 $tertiary: hsla(15, 100%, 91%, 1);
-$tertiary-light: lighten($tertiary, 10);
-$tertiary-lighter: lighten($tertiary, 20);
+$tertiary-light: lighten($tertiary, 3);
+$tertiary-lighter: lighten($tertiary, 6);
 $tertiary-dark: darken($tertiary, 10);
 $tertiary-darker: darken($tertiary, 20);
 
 $accent: hsla(16, 65%, 68%, 1);
 $accent-light: lighten($accent, 10);
 $accent-lighter: lighten($accent, 20);
+$accent-lightest: lighten($accent, 25);
 $accent-dark: darken($accent, 10);
-$accent-darker: darken($accent, 20);
+$accent-darker: darken($accent, 15);
 
 $base-border-radius: 8px;
 $base-border-radius-half: 4px;

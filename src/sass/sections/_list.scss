@@ -14,57 +14,30 @@
     flex-direction: column;
     row-gap: 8px;
 
-    &__header {
+    &__title {
         display: flex;
         font-family: $header-font-family;
         font-size: 1.2rem;
     }
 
-    &:not(__header) {
+    &:not(__title) {
         font-weight: 300;
-        font-size: .8rem;
-
+        font-size: .85rem;
     }
 }
 
 .add-todo-button {
     &_show {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: $white;
-        border: 2px solid $accent-lighter;
-        border-radius: $base-border-radius-half;
-        color: $accent;
-        font-size: 1.1rem;
-        transition: .2s;
-
-        &:hover {
-            background-color: $accent-lighter;
-        }
+        @include add-button;
+        max-width: 30vw;
     }
 
     &_hide {
         display: none;
-    }
-}
-
-.add-todo-form {
-    &_hide {
-        display: none;
-    }
-
-    &_show {
-        display: grid;
-        padding: 1.25rem;
-        font-family: $header-font-family;
-        row-gap: .75rem;
     }
 }
 
 .list-container__item {
-
-    // &-due-date{
-    //     margin-left: auto;
-    // }
+    display: grid;
+    grid-template-columns: 2fr 1fr;
 }

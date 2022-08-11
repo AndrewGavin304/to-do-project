@@ -5,7 +5,7 @@
     background-color: $primary-light;
     justify-content: flex-end;
     gap: 10px;
-    padding: 4px;
+    padding: 1rem 2rem 1rem 2rem;
 
     &__profile-picture-button {
         border-radius: 50%;
@@ -26,6 +26,13 @@
         border: none;
         color: $white;
         font-size: 1.1rem;
+    }
+
+    &__brand-name {
+        font-size: 3rem;
+        color: $white;
+        font-family: $header-font-family;
+        font-weight: 500;
     }
 
 }

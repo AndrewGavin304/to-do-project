@@ -3,3 +3,19 @@
     align-items: center;
     justify-content: center;
 }
+
+@mixin add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    border: 2px solid $accent-lighter;
+    border-radius: $base-border-radius-half;
+    color: $accent;
+    font-size: 1.1rem;
+    transition: .2s;
+
+    &:hover {
+        background-color: $accent-lighter;
+    }
+}

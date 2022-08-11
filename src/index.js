@@ -10,4 +10,5 @@ clickSubmitTodoListener();
 domListen();
 listListen();
 
-pubSub.pub('todo', createTodo({title: 'do the thing', description: 'some description', notes: 'some note', dueDate: 'april 21st 1893'}))
+pubSub.pub('todo', createTodo({title: 'do the thing', description: 'some description', notes: 'some note', dueDate: '2022-02-03T16:16'}))
+pubSub.pub('todo', createTodo({title: 'do something else', description: 'laurem', notes: 'please dont make these long', dueDate: '2022-02-03T16:16'}))

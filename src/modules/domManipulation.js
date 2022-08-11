@@ -1,6 +1,7 @@
 import { createTodo } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj } from "./todoController";
+import { format } from 'date-fns'
 
 let projectList = ['default']
 let priorities = ['low', 'medium', 'high']
@@ -16,29 +17,11 @@ function _generateDomListItem(data){
 
   for (const [key, value] of Object.entries(data)) {
 
-    if (key == 'title') {
-      var headerDiv = document.createElement("div");
-      headerDiv.classList.add("list-container__header");
-
-      let span = document.createElement("span");
-      span.textContent = `${value}`;
-      span.classList.add(`list-container__item-${key}`)
-
-      headerDiv.append(span);
-      itemDiv.append(headerDiv);
+    if (key == 'dueDate') {
+      let unformattedDate = `${value}`
+      let formattedDate = format(new Date(unformattedDate), 'dd/mm/yyyy');
+      _generateListElement(`${key}`, formattedDate)
     }
-
-    // !!MARKED FOR REMOVAL!!
-    // Currently unused but useful - adds an element to be horizontally
-    // in line with another list item
-    // 
-    // else if (key == 'dueDate' && value) {
-    //   let span = document.createElement("span");
-    //   span.textContent = `${value}`;
-    //   span.classList.add("list-container__item-due-date")
-
-    //   headerDiv.append(span);
-    // }
 
     else if (key == 'priority') {
       itemDiv.classList.add(`list-container__item_priority_${value}`)
@@ -48,16 +31,20 @@ function _generateDomListItem(data){
     }
 
     else if (value){
-      let div = document.createElement("div");
-      div.classList.add(`list-container__${key}`);
-
-      let span = document.createElement("span");
-      span.textContent = `${value}`;
-      span.classList.add(`list-container__item-${key}`)
-
-      div.append(span);
-      itemDiv.append(div);
+      _generateListElement(`${key}`, `${value}`)
     }
+  }
+
+  function _generateListElement(key, value){
+    let div = document.createElement("div");
+    div.classList.add(`list-container__${key}`);
+
+    let span = document.createElement("span");
+    span.textContent = `${value}`;
+    span.classList.add(`list-container__item-${key}`)
+
+    div.append(span);
+    itemDiv.append(div);
   }
 
   return itemDiv;
@@ -80,6 +67,7 @@ function _navbar(){
   navbar.classList.add("navbar");
   navbar.setAttribute('id', 'navbar');
 
+  navbar.append(_brandText('navbar'));
   navbar.append(_searchbar());
   navbar.append(_createNameDisplay());
   navbar.append(_createProfilePicture());
@@ -110,10 +98,6 @@ function _navbar(){
 
     return pfpButton;
   }
-
-  // let settingsIcon = document.createElement("span");
-  // settingsIcon.classList.add("material-symbols-outlined", "navbar__settings-icon");
-  // settingsIcon.textContent = "settings";
 
   function _searchbar(){
   let searchbar = document.createElement("form");
@@ -149,19 +133,19 @@ function _listContainer(){
   return listContainer;
 }
 
-function _addTodoButton(){
+function _addTodoButton(id){
   let addTodoButton = document.createElement("button");
   let addTodoButtonIcon = document.createElement("span");
   let addTodoButtonText = document.createElement("span");
 
-  addTodoButton.classList.add("add-todo-button_show", "btn");
-  addTodoButton.setAttribute('id', 'add-todo-button');
+  addTodoButton.classList.add(`${id}_show`, "btn");
+  addTodoButton.setAttribute('id', `${id}`);
 
-  addTodoButtonIcon.classList.add("material-symbols-outlined", "add-todo-button__icon");
+  addTodoButtonIcon.classList.add("material-symbols-outlined", `${id}__icon`);
   addTodoButtonIcon.append("add");
 
   addTodoButtonText.textContent = "Add Todo";
-  addTodoButtonText.classList.add("add-todo-button__text")
+  addTodoButtonText.classList.add(`${id}__text`)
 
   addTodoButton.append(addTodoButtonIcon);
   addTodoButton.append(addTodoButtonText);
@@ -184,6 +168,7 @@ function _generateOptions(key, array){
   });
 
   select.setAttribute("id", `${key}`)
+  select.classList.add("add-todo-form__input")
   return select;
 }
 
@@ -200,7 +185,9 @@ function _addTodoForm(){
     let label = document.createElement("label");
     let input = document.createElement("input");
     label.setAttribute("for", `${key}`);
+    label.classList.add("add-todo-form__label");
     input.setAttribute("id", `${key}`);
+    input.classList.add("add-todo-form__input");
     //replaces key camelCase to Title Case (eg dueDate to Due Date)
     let keyStr = `${key}`
     keyStr = keyStr.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
@@ -233,10 +220,7 @@ function _addTodoForm(){
     form.append(input);
   }
 
-  let submit = document.createElement("button");
-  submit.setAttribute('type', 'button');
-  submit.setAttribute('id', 'add-todo-form__submit')
-  submit.textContent = "Add";
+  let submit = _addTodoButton('add-todo-form__submit');
   form.append(submit);
 
   return form;
@@ -248,7 +232,7 @@ function _homeView(){
   homeView.classList.add("home-container");
 
   homeView.append(_listContainer());
-  homeView.append(_addTodoButton());
+  homeView.append(_addTodoButton('add-todo-button'));
   homeView.append(_addTodoForm());
   content.append(homeView);
 }
@@ -291,7 +275,15 @@ function _toggleAddTodoForm(){
 
 export function clickSubmitTodoListener() {
   let submit = document.getElementById("add-todo-form__submit");
-  submit.addEventListener('click', function() {pubSub.pub('todo', convertFormDataToObj())});
-  submit.addEventListener('click', function() {_toggleAddTodoButton()})
-  submit.addEventListener('click', function() {_toggleAddTodoForm()})
+  submit.addEventListener('click', function(e) {pubSub.pub('todo', convertFormDataToObj()); e.preventDefault();});
+  submit.addEventListener('click', function(e) {_toggleAddTodoButton()})
+  submit.addEventListener('click', function(e) {_toggleAddTodoForm()})
+}
+
+function _brandText(parentClass){
+  let span = document.createElement("span");
+  span.classList.add(`${parentClass}__brand-name`);
+  span.innerText = "TrueDo";
+
+  return span;
 }
