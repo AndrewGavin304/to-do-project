@@ -1,6 +1,8 @@
 import { createTodo } from "./createTodo";
 import { pubSub } from "./pubSub";
 
+let projectList = []
+
 export function listen(){
   console.log("addListItemToDom listener started");
   pubSub.sub('todo', addListItemToDom);
@@ -171,19 +173,53 @@ function _addTodoForm(){
 
   //used to generate form
   const templateTodo = createTodo();
+  const { checked, uuid, ...strippedTodo } = templateTodo;
 
-  for (const [key] of Object.entries(templateTodo)) {
+  for (const [key] of Object.entries(strippedTodo)) {
     let label = document.createElement("label");
     let input = document.createElement("input");
-
     label.setAttribute("for", `${key}`);
-    input.setAttribute("type", "text");
     input.setAttribute("id", `${key}`);
-
     //replaces key camelCase to Title Case (eg dueDate to Due Date)
     let keyStr = `${key}`
     keyStr = keyStr.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
+    keyStr = keyStr[0].toUpperCase() + keyStr.slice(1);
     label.append(keyStr);
+    
+    if (`${key}` == 'priority'){
+      let select = document.createElement('select');
+      let lowprio = document.createElement('option');
+      let mediumprio = document.createElement('option');
+      let highprio = document.createElement('option');
+
+      lowprio.value = 'low';
+      mediumprio.value = 'medium';
+      highprio.value = 'high';
+
+      lowprio.text = 'Low';
+      mediumprio.text = 'Medium';
+      highprio.text = 'High';
+
+      select.append(lowprio);
+      select.append(mediumprio);
+      select.append(highprio);
+      form.append(label);
+      form.append(select);
+      select.setAttribute("id", `${key}`)
+      continue;
+    }
+
+    else if (`${key}` == 'dueDate'){
+      input.setAttribute('type', 'datetime-local');
+    }
+
+    else if (`${key}` == 'project'){
+      
+    }
+
+    else {
+      input.setAttribute("type", "text");
+    }
 
     form.append(label);
     form.append(input);
@@ -197,6 +233,7 @@ function _addTodoForm(){
 
   return form;
 }
+
 
 function _homeView(){
   var homeView = document.createElement("div");

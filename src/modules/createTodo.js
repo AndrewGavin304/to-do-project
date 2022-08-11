@@ -6,7 +6,7 @@ export const createTodo = ({
   dueDate = undefined,
   priority = 'medium',
   notes = undefined,
-  checklist = undefined,
+  checked = false,
   project = undefined,
   uuid = uuidv4()
 } = {}) => ({
@@ -15,7 +15,7 @@ export const createTodo = ({
   dueDate,
   priority,
   notes,
-  checklist,
+  checked,
   project,
   uuid
 })
