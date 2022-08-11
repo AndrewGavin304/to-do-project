@@ -16,15 +16,16 @@
         box-shadow: rgba($accent-darker, 0.1) 0px 10px 15px -3px, rgba($accent-darker, 0.05) 0px 4px 6px -2px;
         color: $accent-dark;
         font-size: 1.25rem;
-        max-width: 30vw;
     }
 
     &__input {
         border: 2px solid $accent-lighter;
-        color: $accent-darker;
+        color: $accent;
         border-radius: $base-border-radius-quarter;
         background-color: $white;
         padding: 4px;
+        font-family: $header-font-family;
+        font-weight: 300;
         &:focus{
             outline-color: $accent;
         }

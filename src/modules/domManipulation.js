@@ -13,18 +13,18 @@ export function listen(){
 
 function _generateDomListItem(data){
   const itemDiv = document.createElement("div");
-  itemDiv.classList.add("list-container__item");
+  itemDiv.classList.add("list-container-item");
 
   for (const [key, value] of Object.entries(data)) {
 
-    if (key == 'dueDate') {
+    if ((key == 'dueDate') && (value)) {
       let unformattedDate = `${value}`
       let formattedDate = format(new Date(unformattedDate), 'dd/mm/yyyy');
       _generateListElement(`${key}`, formattedDate)
     }
 
     else if (key == 'priority') {
-      itemDiv.classList.add(`list-container__item_priority_${value}`)
+      itemDiv.classList.add(`list-container-item_priority_${value}`)
     }
 
     else if (key == 'uuid') {
@@ -37,11 +37,11 @@ function _generateDomListItem(data){
 
   function _generateListElement(key, value){
     let div = document.createElement("div");
-    div.classList.add(`list-container__${key}`);
+    div.classList.add(`list-container-item__${key}`);
 
     let span = document.createElement("span");
     span.textContent = `${value}`;
-    span.classList.add(`list-container__item-${key}`)
+    span.classList.add(`list-container-item-${key}`)
 
     div.append(span);
     itemDiv.append(div);

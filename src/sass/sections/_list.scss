@@ -29,7 +29,6 @@
 .add-todo-button {
     &_show {
         @include add-button;
-        max-width: 30vw;
     }
 
     &_hide {
@@ -37,7 +36,26 @@
     }
 }
 
-.list-container__item {
+.list-container-item {
     display: grid;
     grid-template-columns: 2fr 1fr;
+    grid-template-rows: 3fr 2fr 2fr;
+
+    &__title {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    &__description {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    &__notes {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    &__date {
+        grid-column: 2;
+        grid-row: 1;
+    }
 }
