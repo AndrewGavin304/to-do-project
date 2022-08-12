@@ -14,13 +14,13 @@
     flex-direction: column;
     row-gap: 8px;
 
-    &__title {
+    &-title {
         display: flex;
         font-family: $header-font-family;
         font-size: 1.2rem;
     }
 
-    &:not(__title) {
+    &:not(-title) {
         font-weight: 300;
         font-size: .85rem;
     }
@@ -40,22 +40,24 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 3fr 2fr 2fr;
+}
 
-    &__title {
+.list-item {
+    &-title {
         grid-column: 1;
         grid-row: 1;
     }
-    &__description {
+    &-description {
         grid-column: 1;
         grid-row: 2;
     }
-    &__notes {
+    &-notes {
         grid-column: 1;
         grid-row: 3;
     }
 
-    &__date {
+    &-dueDate {
         grid-column: 2;
-        grid-row: 1;
+        grid-row: 2;
     }
 }

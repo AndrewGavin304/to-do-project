@@ -94,7 +94,7 @@ export function generateHomeLayout() {
 
     function _searchbar() {
       let searchbar = _createElement("form", "searchbar");
-      
+
       let searchbarInput = _createElement("input", "searchbar__input", "r");
       searchbarInput.setAttribute("type", "search");
       searchbarInput.setAttribute("autocomplete", "off");
@@ -194,11 +194,7 @@ function _addTodoForm() {
 
     let input = _createElement("input", "add-todo-form__input", `${key}`);
 
-    //replaces key camelCase to Title Case (eg dueDate to Due Date)
-    let keyStr = `${key}`;
-    keyStr = keyStr.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
-    keyStr = keyStr[0].toUpperCase() + keyStr.slice(1);
-    label.append(keyStr);
+    label.append(_camelToCaps(`${key}`));
 
     if (`${key}` == "priority") {
       form.append(label);
@@ -257,4 +253,10 @@ function _toggleElement(id) {
     element.classList.remove(`${id}_hide`);
     element.classList.add(`${id}_show`);
   }
+}
+
+function _camelToCaps(str){
+  let newStr = str.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
+  newStr = newStr[0].toUpperCase() + newStr.slice(1);
+  return newStr;
 }
