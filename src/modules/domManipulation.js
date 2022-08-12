@@ -275,3 +275,8 @@ function _brandText(parentClass){
 
   return span;
 }
+
+function _createElement(type, id, className){
+  let element = document.createElement(`${type}`);
+  className ? element.classList.add(`${className}`) : element.classList.add(`${id}`)
+}
