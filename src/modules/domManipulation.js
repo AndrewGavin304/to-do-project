@@ -41,36 +41,42 @@ export function domListeners() {
   }
 }
 
+function _createElement(type, className, id) {
+  let element = document.createElement(`${type}`);
+  element.classList.add(`${className}`);
+  if (id == "r") {
+    element.setAttribute("id", `${className}`);
+  } else if (id) {
+    element.setAttribute("id", `${id}`);
+  }
+
+  return element;
+}
+
 export function generateHomeLayout() {
   _navbar();
   _sidebar();
   _content();
 
   function _navbar() {
-    let navbar = document.createElement("div");
-    navbar.classList.add("navbar");
-    navbar.setAttribute("id", "navbar");
+    let navbar = _createElement("div", "navbar");
+    let brandName = _createElement("span", "navbar__brand-name");
+    brandName.textContent = "TrueDo";
 
-    navbar.append(_brandText("navbar"));
+    let username = _createElement("button", "navbar__name", "r");
+    username.classList.add("btn");
+    username.textContent = "Andrew Gavin";
+
+    navbar.append(brandName);
     navbar.append(_searchbar());
-    navbar.append(_createNameDisplay());
+    navbar.append(username);
     navbar.append(_createProfilePicture());
-    // navbar.append(settingsIcon);
     document.body.append(navbar);
-
-    function _createNameDisplay() {
-      let nameButton = document.createElement("button");
-      nameButton.classList.add("navbar__name", "btn");
-      nameButton.setAttribute("id", "navbar__name");
-      nameButton.textContent = "Andrew Gavin";
-      return nameButton;
-    }
 
     function _createProfilePicture() {
       //check index.html for Jdenticon config
-      let pfpButton = document.createElement("button");
-      pfpButton.classList.add("navbar__profile-picture-button", "btn");
-      pfpButton.setAttribute("id", "navbar__profile-picture-button");
+      let pfpButton = _createElement("button", "navbar__pfp-button", "r");
+      pfpButton.classList.add("btn");
 
       let pfp = document.createElement("canvas");
       pfp.classList.add("navbar__profile-picture");
@@ -84,17 +90,12 @@ export function generateHomeLayout() {
     }
 
     function _searchbar() {
-      let searchbar = document.createElement("form");
-      searchbar.classList.add("searchbar");
-
-      let searchbarInput = document.createElement("input");
-      searchbarInput.classList.add("searchbar__input");
+      let searchbar = _createElement("form", "searchbar");
+      let searchbarInput = _createElement("input", "searchbar__input", "r");
       searchbarInput.setAttribute("type", "search");
-      searchbarInput.setAttribute("id", "search");
       searchbarInput.setAttribute("autocomplete", "off");
 
-      let searchbarIcon = document.createElement("span");
-      searchbarIcon.classList.add("material-symbols-outlined");
+      let searchbarIcon = _createElement("span", "material-symbols-outlined");
       searchbarIcon.textContent = "search";
 
       searchbar.append(searchbarIcon);
@@ -104,27 +105,24 @@ export function generateHomeLayout() {
   }
 
   function _sidebar() {
-    let sidebar = document.createElement("div");
-    sidebar.classList.add("sidebar");
-    sidebar.setAttribute("id", "sidebar");
+    let sidebar = _createElement("div", "sidebar", "r");
     document.body.append(sidebar);
   }
 
   function _content() {
-    var content = document.createElement("div");
-    content.classList.add("content");
+    var content = _createElement("div", "content");
 
-    content.append(_listContainer());
-    content.append(_addTodoButton("add-todo-button"));
+    content.append(_createElement("div", "list-container", "r"));
+    content.append(
+      _createSymbolButton(
+        "add",
+        "Add Todo",
+        "add-todo-button_show",
+        "add-todo-button"
+      )
+    );
     content.append(_addTodoForm());
     document.body.append(content);
-
-    function _listContainer() {
-      let listContainer = document.createElement("div");
-      listContainer.classList.add("list-container");
-      listContainer.setAttribute("id", "list-container");
-      return listContainer;
-    }
   }
 }
 
@@ -166,24 +164,19 @@ function addListItemToDom(data) {
   }
 }
 
-function _addTodoButton(id) {
-  let addTodoButton = document.createElement("button");
-  let addTodoButtonIcon = document.createElement("span");
-  let addTodoButtonText = document.createElement("span");
+function _createSymbolButton(symbol, text, className, id) {
+  let button = _createElement("button", `${className}`, `${id}`);
+  let buttonSymbol = _createElement("span", `${className}__symbol`);
+  let buttonText = _createElement("span", `${className}__text`);
 
-  addTodoButton.classList.add(`${id}_show`, "btn");
-  addTodoButton.setAttribute("id", `${id}`);
+  buttonSymbol.classList.add("material-symbols-outlined");
+  buttonSymbol.textContent = `${symbol}`;
+  buttonText.textContent = `${text}`;
 
-  addTodoButtonIcon.classList.add("material-symbols-outlined", `${id}__icon`);
-  addTodoButtonIcon.append("add");
+  button.append(buttonSymbol);
+  button.append(buttonText);
 
-  addTodoButtonText.textContent = "Add Todo";
-  addTodoButtonText.classList.add(`${id}__text`);
-
-  addTodoButton.append(addTodoButtonIcon);
-  addTodoButton.append(addTodoButtonText);
-
-  return addTodoButton;
+  return button;
 }
 
 function _addTodoForm() {
@@ -227,7 +220,12 @@ function _addTodoForm() {
     form.append(input);
   }
 
-  let submit = _addTodoButton("add-todo-form__submit");
+  let submit = _createSymbolButton(
+    "add",
+    "Add Todo",
+    "add-todo-form__submit_show",
+    "add-todo-form__submit"
+  );
   form.append(submit);
 
   return form;
@@ -262,19 +260,4 @@ function _toggleElement(id) {
     element.classList.remove(`${id}_hide`);
     element.classList.add(`${id}_show`);
   }
-}
-
-function _brandText(parentClass) {
-  let span = document.createElement("span");
-  span.classList.add(`${parentClass}__brand-name`);
-  span.innerText = "TrueDo";
-
-  return span;
-}
-
-function _createElement(type, id, className) {
-  let element = document.createElement(`${type}`);
-  className
-    ? element.classList.add(`${className}`)
-    : element.classList.add(`${id}`);
 }
