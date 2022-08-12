@@ -6,22 +6,28 @@ import { format } from 'date-fns'
 let projectList = ['default']
 let priorities = ['low', 'medium', 'high']
 
-export function addListItemToDomListener(){
-  console.log("addListItemToDom listener started");
-  pubSub.sub('todo', addListItemToDom);
-}
+export function domListeners() {
+  _addListItemToDomListener()
+  _clickSubmitTodoListener()
+  _clickAddTodoListener()
 
-export function clickSubmitTodoListener() {
-  let submit = document.getElementById("add-todo-form__submit");
-  submit.addEventListener('click', function(e) {pubSub.pub('todo', convertFormDataToObj()); e.preventDefault();});
-  submit.addEventListener('click', function(e) {_toggleAddTodoButton()})
-  submit.addEventListener('click', function(e) {_toggleAddTodoForm()})
-}
-
-export function clickAddTodoListener(){
-  let addTodoButton = document.getElementById("add-todo-button");
-  addTodoButton.addEventListener('click', function() {_toggleAddTodoButton()})
-  addTodoButton.addEventListener('click', function() {_toggleAddTodoForm()})
+  function _addListItemToDomListener(){
+    console.log("addListItemToDom listener started");
+    pubSub.sub('todo', addListItemToDom);
+  }
+  
+  function _clickSubmitTodoListener(){
+    let submit = document.getElementById("add-todo-form__submit");
+    submit.addEventListener('click', function(e) {pubSub.pub('todo', convertFormDataToObj()); e.preventDefault();});
+    submit.addEventListener('click', function(e) {_toggleElement('add-todo-button')})
+    submit.addEventListener('click', function(e) {_toggleElement('add-todo-form')})
+  }
+  
+  function _clickAddTodoListener(){
+    let addTodoButton = document.getElementById("add-todo-button");
+    addTodoButton.addEventListener('click', function() {_toggleElement('add-todo-button')})
+    addTodoButton.addEventListener('click', function() {_toggleElement('add-todo-form')})
+  }
 }
 
 export function generateHomeLayout(){
@@ -248,32 +254,17 @@ function _generateDropdownOptions(key, array){
   return select;
 }
 
-function _toggleAddTodoButton(){
-  const addTodoButton = document.getElementById("add-todo-button");
+function _toggleElement(id){
+  const element = document.getElementById(`${id}`);
   
-  if (addTodoButton.classList.contains("add-todo-button_show")){
-    addTodoButton.classList.remove('add-todo-button_show');
-    addTodoButton.classList.add('add-todo-button_hide');
+  if (element.classList.contains(`${id}_show`)){
+    element.classList.remove(`${id}_show`);
+    element.classList.add(`${id}_hide`);
   }
 
   else{
-    addTodoButton.classList.remove('add-todo-button_hide');
-    addTodoButton.classList.add('add-todo-button_show');
-  }
-
-}
-
-function _toggleAddTodoForm(){
-  const addTodoForm = document.getElementById('add-todo-form');
-
-  if (addTodoForm.classList.contains('add-todo-form_hide')){
-    addTodoForm.classList.remove('add-todo-form_hide');
-    addTodoForm.classList.add('add-todo-form_show');
-  } 
-    
-  else {
-    addTodoForm.classList.remove('add-todo-form_show');
-    addTodoForm.classList.add('add-todo-form_hide');
+    element.classList.remove(`${id}_hide`);
+    element.classList.add(`${id}_show`);
   }
 }
 
