@@ -3,4 +3,16 @@
     grid-row: 2;
     height: 100vh;
     background-color: $white-darker;
+
+    &__add-project-btn{
+    
+        &_show {
+            @include add-button;
+            // margin-top: 10px;
+        }
+
+        &_hide {
+            display: none;
+        }
+    }
 }

@@ -29,11 +29,14 @@
     "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
+    "change-case": "^4.1.2",
     "css-loader": "^6.7.1",
     "date-fns": "^2.29.1",
     "jdenticon": "^3.2.0",
     "material-symbols": "^0.2.7",
+    "source-map-loader": "^4.0.0",
     "style-loader": "^3.3.1",
+    "title-case": "^3.0.3",
     "uuid": "^8.3.2"
   }
 }

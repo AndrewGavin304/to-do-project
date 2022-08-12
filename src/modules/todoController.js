@@ -5,7 +5,8 @@ const list = [];
 export const createTodo = ({
   title = "Todo Item",
   description = undefined,
-  dueDate = undefined,
+  date = undefined,
+  time = undefined,
   priority = "medium",
   notes = undefined,
   checked = false,
@@ -14,7 +15,8 @@ export const createTodo = ({
 } = {}) => ({
   title,
   description,
-  dueDate,
+  date,
+  time,
   priority,
   notes,
   checked,
@@ -28,6 +30,7 @@ export function listen() {
 
 function addToListArray(data) {
   list.push(data);
+  console.log(list);
 }
 
 export function convertFormDataToObj() {
