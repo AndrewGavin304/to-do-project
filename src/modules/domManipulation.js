@@ -1,180 +1,184 @@
 import { createTodo } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj } from "./todoController";
-import { format } from 'date-fns'
+import { format } from "date-fns";
 
-let projectList = ['default']
-let priorities = ['low', 'medium', 'high']
+let projectList = ["default"];
+let priorities = ["low", "medium", "high"];
 
 export function domListeners() {
-  _addListItemToDomListener()
-  _clickSubmitTodoListener()
-  _clickAddTodoListener()
+  _addListItemToDomListener();
+  _clickSubmitTodoListener();
+  _clickAddTodoListener();
 
-  function _addListItemToDomListener(){
+  function _addListItemToDomListener() {
     console.log("addListItemToDom listener started");
-    pubSub.sub('todo', addListItemToDom);
+    pubSub.sub("todo", addListItemToDom);
   }
-  
-  function _clickSubmitTodoListener(){
+
+  function _clickSubmitTodoListener() {
     let submit = document.getElementById("add-todo-form__submit");
-    submit.addEventListener('click', function(e) {pubSub.pub('todo', convertFormDataToObj()); e.preventDefault();});
-    submit.addEventListener('click', function(e) {_toggleElement('add-todo-button')})
-    submit.addEventListener('click', function(e) {_toggleElement('add-todo-form')})
+    submit.addEventListener("click", function (e) {
+      pubSub.pub("todo", convertFormDataToObj());
+      e.preventDefault();
+    });
+    submit.addEventListener("click", function (e) {
+      _toggleElement("add-todo-button");
+    });
+    submit.addEventListener("click", function (e) {
+      _toggleElement("add-todo-form");
+    });
   }
-  
-  function _clickAddTodoListener(){
+
+  function _clickAddTodoListener() {
     let addTodoButton = document.getElementById("add-todo-button");
-    addTodoButton.addEventListener('click', function() {_toggleElement('add-todo-button')})
-    addTodoButton.addEventListener('click', function() {_toggleElement('add-todo-form')})
+    addTodoButton.addEventListener("click", function () {
+      _toggleElement("add-todo-button");
+    });
+    addTodoButton.addEventListener("click", function () {
+      _toggleElement("add-todo-form");
+    });
   }
 }
 
-export function generateHomeLayout(){
+export function generateHomeLayout() {
   _navbar();
   _sidebar();
   _content();
 
-  function _navbar(){
+  function _navbar() {
     let navbar = document.createElement("div");
     navbar.classList.add("navbar");
-    navbar.setAttribute('id', 'navbar');
-  
-    navbar.append(_brandText('navbar'));
+    navbar.setAttribute("id", "navbar");
+
+    navbar.append(_brandText("navbar"));
     navbar.append(_searchbar());
     navbar.append(_createNameDisplay());
     navbar.append(_createProfilePicture());
     // navbar.append(settingsIcon);
     document.body.append(navbar);
-  
+
     function _createNameDisplay() {
       let nameButton = document.createElement("button");
       nameButton.classList.add("navbar__name", "btn");
-      nameButton.setAttribute('id', 'navbar__name');
+      nameButton.setAttribute("id", "navbar__name");
       nameButton.textContent = "Andrew Gavin";
       return nameButton;
     }
-  
+
     function _createProfilePicture() {
       //check index.html for Jdenticon config
       let pfpButton = document.createElement("button");
       pfpButton.classList.add("navbar__profile-picture-button", "btn");
-      pfpButton.setAttribute('id', "navbar__profile-picture-button");
-  
+      pfpButton.setAttribute("id", "navbar__profile-picture-button");
+
       let pfp = document.createElement("canvas");
       pfp.classList.add("navbar__profile-picture");
-      pfp.setAttribute('width', '44');
-      pfp.setAttribute('height', '44');
-      pfp.setAttribute('data-jdenticon-value', 'AndrewG');
-  
+      pfp.setAttribute("width", "44");
+      pfp.setAttribute("height", "44");
+      pfp.setAttribute("data-jdenticon-value", "AndrewG");
+
       pfpButton.append(pfp);
-  
+
       return pfpButton;
     }
-  
-    function _searchbar(){
-    let searchbar = document.createElement("form");
-    searchbar.classList.add("searchbar");
-  
-    let searchbarInput = document.createElement("input");
-    searchbarInput.classList.add("searchbar__input");
-    searchbarInput.setAttribute('type', 'search');
-    searchbarInput.setAttribute('id', 'search');
-    searchbarInput.setAttribute('autocomplete', 'off');
-  
-    let searchbarIcon = document.createElement("span");
-    searchbarIcon.classList.add("material-symbols-outlined");
-    searchbarIcon.textContent = "search";
-  
-    searchbar.append(searchbarIcon);
-    searchbar.append(searchbarInput);
-    return searchbar;
+
+    function _searchbar() {
+      let searchbar = document.createElement("form");
+      searchbar.classList.add("searchbar");
+
+      let searchbarInput = document.createElement("input");
+      searchbarInput.classList.add("searchbar__input");
+      searchbarInput.setAttribute("type", "search");
+      searchbarInput.setAttribute("id", "search");
+      searchbarInput.setAttribute("autocomplete", "off");
+
+      let searchbarIcon = document.createElement("span");
+      searchbarIcon.classList.add("material-symbols-outlined");
+      searchbarIcon.textContent = "search";
+
+      searchbar.append(searchbarIcon);
+      searchbar.append(searchbarInput);
+      return searchbar;
     }
   }
 
-  function _sidebar(){
+  function _sidebar() {
     let sidebar = document.createElement("div");
     sidebar.classList.add("sidebar");
-    sidebar.setAttribute('id', 'sidebar');
+    sidebar.setAttribute("id", "sidebar");
     document.body.append(sidebar);
   }
 
-  function _content(){
+  function _content() {
     var content = document.createElement("div");
     content.classList.add("content");
-  
+
     content.append(_listContainer());
-    content.append(_addTodoButton('add-todo-button'));
+    content.append(_addTodoButton("add-todo-button"));
     content.append(_addTodoForm());
     document.body.append(content);
 
-    function _listContainer(){
+    function _listContainer() {
       let listContainer = document.createElement("div");
       listContainer.classList.add("list-container");
-      listContainer.setAttribute('id', 'list-container');
+      listContainer.setAttribute("id", "list-container");
       return listContainer;
     }
   }
 }
- 
-function addListItemToDom(data){
+
+function addListItemToDom(data) {
   let listContainer = document.getElementById("list-container");
-  console.log(`addListItemToDom received ${data}`)
+  console.log(`addListItemToDom received ${data}`);
   listContainer.append(_generateDomListItem(data));
 
-  function _generateDomListItem(data){
+  function _generateDomListItem(data) {
     const itemDiv = document.createElement("div");
     itemDiv.classList.add("list-container-item");
-  
+
     for (const [key, value] of Object.entries(data)) {
-  
-      if ((key == 'dueDate') && (value)) {
-        let unformattedDate = `${value}`
-        let formattedDate = format(new Date(unformattedDate), 'dd/mm/yyyy');
-        _generateListElement(`${key}`, formattedDate)
-      }
-  
-      else if (key == 'priority') {
-        itemDiv.classList.add(`list-container-item_priority_${value}`)
-      }
-  
-      else if (key == 'uuid') {
-      }
-  
-      else if (value){
-        _generateListElement(`${key}`, `${value}`)
+      if (key == "dueDate" && value) {
+        let unformattedDate = `${value}`;
+        let formattedDate = format(new Date(unformattedDate), "dd/mm/yyyy");
+        _generateListElement(`${key}`, formattedDate);
+      } else if (key == "priority") {
+        itemDiv.classList.add(`list-container-item_priority_${value}`);
+      } else if (key == "uuid") {
+      } else if (value) {
+        _generateListElement(`${key}`, `${value}`);
       }
     }
-  
-    function _generateListElement(key, value){
+
+    function _generateListElement(key, value) {
       let div = document.createElement("div");
       div.classList.add(`list-container-item__${key}`);
-  
+
       let span = document.createElement("span");
       span.textContent = `${value}`;
-      span.classList.add(`list-container-item-${key}`)
-  
+      span.classList.add(`list-container-item-${key}`);
+
       div.append(span);
       itemDiv.append(div);
     }
-  
+
     return itemDiv;
   }
 }
 
-function _addTodoButton(id){
+function _addTodoButton(id) {
   let addTodoButton = document.createElement("button");
   let addTodoButtonIcon = document.createElement("span");
   let addTodoButtonText = document.createElement("span");
 
   addTodoButton.classList.add(`${id}_show`, "btn");
-  addTodoButton.setAttribute('id', `${id}`);
+  addTodoButton.setAttribute("id", `${id}`);
 
   addTodoButtonIcon.classList.add("material-symbols-outlined", `${id}__icon`);
   addTodoButtonIcon.append("add");
 
   addTodoButtonText.textContent = "Add Todo";
-  addTodoButtonText.classList.add(`${id}__text`)
+  addTodoButtonText.classList.add(`${id}__text`);
 
   addTodoButton.append(addTodoButtonIcon);
   addTodoButton.append(addTodoButtonText);
@@ -182,9 +186,9 @@ function _addTodoButton(id){
   return addTodoButton;
 }
 
-function _addTodoForm(){
+function _addTodoForm() {
   let form = document.createElement("form");
-  form.setAttribute('id', 'add-todo-form');
+  form.setAttribute("id", "add-todo-form");
   form.classList.add("add-todo-form_hide");
 
   //used to generate form
@@ -199,76 +203,68 @@ function _addTodoForm(){
     input.setAttribute("id", `${key}`);
     input.classList.add("add-todo-form__input");
     //replaces key camelCase to Title Case (eg dueDate to Due Date)
-    let keyStr = `${key}`
+    let keyStr = `${key}`;
     keyStr = keyStr.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
     keyStr = keyStr[0].toUpperCase() + keyStr.slice(1);
     label.append(keyStr);
-    
-    if (`${key}` == 'priority'){
+
+    if (`${key}` == "priority") {
       form.append(label);
       form.append(_generateDropdownOptions(`${key}`, priorities));
       continue;
-    }
-
-    else if (`${key}` == 'project'){
+    } else if (`${key}` == "project") {
       form.append(label);
       form.append(_generateDropdownOptions(`${key}`, projectList));
       continue;
-    }
-
-    else if (`${key}` == 'dueDate'){
-      input.setAttribute('type', 'datetime-local');
-    }
-
-    else {
+    } else if (`${key}` == "dueDate") {
+      input.setAttribute("type", "datetime-local");
+    } else {
       input.setAttribute("type", "text");
-      input.setAttribute('autocomplete', 'off');
+      input.setAttribute("autocomplete", "off");
     }
 
     form.append(label);
     form.append(input);
   }
 
-  let submit = _addTodoButton('add-todo-form__submit');
+  let submit = _addTodoButton("add-todo-form__submit");
   form.append(submit);
 
   return form;
 }
 
-function _generateDropdownOptions(key, array){
-  let select = document.createElement('select');
+function _generateDropdownOptions(key, array) {
+  let select = document.createElement("select");
 
-  array.forEach(e => {
-    let option = document.createElement('option');
-    option.value = `${e}`
+  array.forEach((e) => {
+    let option = document.createElement("option");
+    option.value = `${e}`;
     option.text = `${e}`[0].toUpperCase() + `${e}`.slice(1);
 
-    if (option.value == 'medium'){
-      option.setAttribute('selected', 'selected');
+    if (option.value == "medium") {
+      option.setAttribute("selected", "selected");
     }
     select.append(option);
   });
 
-  select.setAttribute("id", `${key}`)
-  select.classList.add("add-todo-form__input")
+  select.setAttribute("id", `${key}`);
+  select.classList.add("add-todo-form__input");
   return select;
 }
 
-function _toggleElement(id){
+function _toggleElement(id) {
   const element = document.getElementById(`${id}`);
-  
-  if (element.classList.contains(`${id}_show`)){
+
+  if (element.classList.contains(`${id}_show`)) {
     element.classList.remove(`${id}_show`);
     element.classList.add(`${id}_hide`);
-  }
-
-  else{
+  } else {
     element.classList.remove(`${id}_hide`);
     element.classList.add(`${id}_show`);
   }
 }
 
-function _brandText(parentClass){
+function _brandText(parentClass) {
   let span = document.createElement("span");
   span.classList.add(`${parentClass}__brand-name`);
   span.innerText = "TrueDo";
@@ -276,7 +272,9 @@ function _brandText(parentClass){
   return span;
 }
 
-function _createElement(type, id, className){
+function _createElement(type, id, className) {
   let element = document.createElement(`${type}`);
-  className ? element.classList.add(`${className}`) : element.classList.add(`${id}`)
+  className
+    ? element.classList.add(`${className}`)
+    : element.classList.add(`${id}`);
 }

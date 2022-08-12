@@ -1,16 +1,16 @@
-import { pubSub }from "./pubSub"
-import { v4 as uuidv4 } from 'uuid';
+import { pubSub } from "./pubSub";
+import { v4 as uuidv4 } from "uuid";
 
 const list = [];
 export const createTodo = ({
-  title = 'Todo Item',
+  title = "Todo Item",
   description = undefined,
   dueDate = undefined,
-  priority = 'medium',
+  priority = "medium",
   notes = undefined,
   checked = false,
   project = undefined,
-  uuid = uuidv4()
+  uuid = uuidv4(),
 } = {}) => ({
   title,
   description,
@@ -19,29 +19,29 @@ export const createTodo = ({
   notes,
   checked,
   project,
-  uuid
-})
-  
-export function listen(){
+  uuid,
+});
+
+export function listen() {
   console.log("todoListener started");
-  pubSub.sub('todo', addToListArray);
+  pubSub.sub("todo", addToListArray);
 }
 
-function addToListArray(data){
-  console.log(`addToList received ${data}`)
-  list.push(data)
-  console.log(list)
+function addToListArray(data) {
+  console.log(`addToList received ${data}`);
+  list.push(data);
+  console.log(list);
 }
 
-export function convertFormDataToObj(){
-  const inputs = document.querySelectorAll('#add-todo-form input');
+export function convertFormDataToObj() {
+  const inputs = document.querySelectorAll("#add-todo-form input");
   let todoObj = createTodo();
 
-  inputs.forEach(input => {
-    if (input.value){
-    todoObj[input.id] = input.value;
+  inputs.forEach((input) => {
+    if (input.value) {
+      todoObj[input.id] = input.value;
     }
-  })
+  });
 
   return todoObj;
 }
