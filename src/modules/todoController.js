@@ -37,16 +37,28 @@ function addToTodoArray(data) {
 }
 
 function addToProjectArray(data) {
+  console.log(projectList)
   projectList.push(data);
 }
 
 export function convertFormDataToObj() {
   const inputs = document.querySelectorAll("#add-todo-form input");
+  const selects = document.querySelectorAll("#add-todo-form select");
+
   let todoObj = createTodo();
 
   inputs.forEach((input) => {
     if (input.value) {
       todoObj[input.id] = input.value;
+    }
+  });
+
+  selects.forEach((select) => {
+    let chosenOption = select.options[select.selectedIndex].value;
+    console.log(chosenOption);
+    if (chosenOption) {
+      console.log(todoObj[select.id]);
+      todoObj[select.id] = chosenOption;
     }
   });
 

@@ -7,6 +7,7 @@ export const pubSub = (function () {
   }
 
   function pub(eventName, data) {
+    console.log(events);
     if (events[eventName]) {
       events[eventName].forEach((f) => f(data));
     }

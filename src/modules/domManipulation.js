@@ -56,7 +56,11 @@ export function domListeners() {
   function _clickSubmitProjectListener() {
     let submit = document.getElementById("add-project-form__submit");
     submit.addEventListener("click", function (e) {
-      pubSub.pub("project", document.getElementById("add-project-form__input").value);
+      pubSub.pub("project", getProjectName());
+      e.preventDefault();
+    });
+    submit.addEventListener("click", function (e) {
+      pubSub.sub("project", addProjectInSidebar);
       e.preventDefault();
     });
     submit.addEventListener("click", function (e) {
@@ -126,8 +130,9 @@ export function generateHomeLayout() {
 
   function _sidebar() {
     let sidebar = createElement("div", "sidebar", "r");
+    let projectDisplay = createElement("div", "sidebar__project-display", "r");
 
-    let projectButton = createSymbolButton(
+    let addProjectButton = createSymbolButton(
       "add",
       "Add Project",
       "sidebar__add-project-btn_show",
@@ -136,7 +141,8 @@ export function generateHomeLayout() {
 
     let addProjectForm = _addProjectForm();
 
-    sidebar.append(projectButton);
+    sidebar.append(projectDisplay);
+    sidebar.append(addProjectButton);
     sidebar.append(addProjectForm);
     document.body.append(sidebar);
   }
@@ -166,6 +172,8 @@ function addListItemToDom(data) {
 
   function _generateDomListItem(data) {
     let itemDiv = createElement("div", "list-item-container");
+
+    console.log(data);
 
     for (const [key, value] of Object.entries(data)) {
       if (key == "date" && value) {
@@ -205,24 +213,39 @@ function _addTodoForm() {
     let label = createElement("label", "add-todo-form__label");
     label.setAttribute("for", `${key}`);
 
-    let input = createElement("input", "add-todo-form__input", paramCase(`${key}`));
+    let input = createElement(
+      "input",
+      "add-todo-form__input",
+      paramCase(`${key}`)
+    );
 
     label.append(titleCase(noCase(`${key}`)));
 
     if (`${key}` == "priority") {
       form.append(label);
-      form.append(_generateDropdownOptions(`${key}`, priorities));
+      let selectPrio = createElement(
+        "select",
+        "add-todo-form__input",
+        `${key}`
+      );
+      selectPrio = _generateDropdownOptions(selectPrio, priorities);
+      form.append(selectPrio);
       continue;
     } else if (`${key}` == "project") {
       form.append(label);
-      form.append(_generateDropdownOptions(`${key}`, projectList));
+      let selectProj = createElement(
+        "select",
+        "add-todo-form__input",
+        `${key}`
+      );
+      selectProj = _generateDropdownOptions(selectProj, projectList);
+      form.append(selectProj);
       continue;
     } else if (`${key}` == "date") {
       input.setAttribute("type", "date");
     } else if (`${key}` == "time") {
       input.setAttribute("type", "time");
-    }
-    else {
+    } else {
       input.setAttribute("type", "text");
       input.setAttribute("autocomplete", "off");
     }
@@ -239,24 +262,36 @@ function _addTodoForm() {
   );
   form.append(submit);
 
-  // pubSub.sub("project"
-
   return form;
 }
 
-function _refreshProjectOptions(id) {
-  const options = document.getElementById(`${id}`);
-  while (options.firstChild) {
-    options.removeChild(options.firstChild);
-  }
-  form.append(_generateDropdownOptions(`${key}`, projectList))
+function getProjectName(data) {
+  const input = document.getElementById("add-project-form__input");
+  const name = input.value;
+
+  return name;
+}
+
+function addProjectInSidebar(data) {
+  let projectDisplay = document.getElementById("sidebar__project-display");
+  let projectButton = createElement(
+    "button",
+    "sidebar_project-button",
+    `sidebar__project-button_${data}`
+  );
+  projectButton.textContent = titleCase(`${data}`);
+  projectDisplay.append(projectButton);
 }
 
 function _addProjectForm() {
   let form = createElement("form", "add-project-form_hide", "add-project-form");
   let label = createElement("label", "add-project-form__label");
   let input = createElement("input", "add-project-form__input", "r");
-  let projectSubmit = createElement("button", "add-project-form__submit-btn", "add-project-form__submit");
+  let projectSubmit = createElement(
+    "button",
+    "add-project-form__submit-btn",
+    "add-project-form__submit"
+  );
 
   form.append(label);
   form.append(input);
@@ -264,9 +299,7 @@ function _addProjectForm() {
   return form;
 }
 
-function _generateDropdownOptions(key, array) {
-  let select = createElement("select", "add-todo-form__input", `add-todo-form__input-${key}`);
-
+function _generateDropdownOptions(select, array) {
   array.forEach((e) => {
     let option = document.createElement("option");
     option.value = `${e}`;
@@ -275,6 +308,7 @@ function _generateDropdownOptions(key, array) {
     if (option.value == "medium") {
       option.setAttribute("selected", "selected");
     }
+    console.log(select);
     select.append(option);
   });
 
