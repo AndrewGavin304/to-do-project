@@ -1,12 +1,11 @@
 import { createTodo } from "./todoController";
 import { pubSub } from "./pubSub";
-import { convertFormDataToObj } from "./todoController";
+import { convertFormDataToObj, projectList } from "./todoController";
 import { format } from "date-fns";
 import { createElement, createSymbolButton } from "./components";
 import { camelCase, noCase, paramCase } from "change-case";
 import { titleCase } from "title-case";
 
-let projectList = ["default"];
 let priorities = ["low", "medium", "high"];
 
 export function domListeners() {
@@ -14,6 +13,7 @@ export function domListeners() {
   _clickSubmitTodoListener();
   _clickAddTodoListener();
   _clickAddToProjectListener();
+  _clickSubmitProjectListener();
 
   function _addListItemToDomListener() {
     pubSub.sub("todo", addListItemToDom);
@@ -49,6 +49,20 @@ export function domListeners() {
       _toggleElement("add-project-form");
     });
     addProjectButton.addEventListener("click", function () {
+      _toggleElement("sidebar__add-project-btn");
+    });
+  }
+
+  function _clickSubmitProjectListener() {
+    let submit = document.getElementById("add-project-form__submit");
+    submit.addEventListener("click", function (e) {
+      pubSub.pub("project", document.getElementById("add-project-form__input").value);
+      e.preventDefault();
+    });
+    submit.addEventListener("click", function (e) {
+      _toggleElement("add-project-form");
+    });
+    submit.addEventListener("click", function (e) {
       _toggleElement("sidebar__add-project-btn");
     });
   }
@@ -225,16 +239,33 @@ function _addTodoForm() {
   );
   form.append(submit);
 
+  // pubSub.sub("project"
+
   return form;
+}
+
+function _refreshProjectOptions(id) {
+  const options = document.getElementById(`${id}`);
+  while (options.firstChild) {
+    options.removeChild(options.firstChild);
+  }
+  form.append(_generateDropdownOptions(`${key}`, projectList))
 }
 
 function _addProjectForm() {
   let form = createElement("form", "add-project-form_hide", "add-project-form");
+  let label = createElement("label", "add-project-form__label");
+  let input = createElement("input", "add-project-form__input", "r");
+  let projectSubmit = createElement("button", "add-project-form__submit-btn", "add-project-form__submit");
+
+  form.append(label);
+  form.append(input);
+  form.append(projectSubmit);
   return form;
 }
 
 function _generateDropdownOptions(key, array) {
-  let select = createElement("select", "add-todo-form__input", `${key}`);
+  let select = createElement("select", "add-todo-form__input", `add-todo-form__input-${key}`);
 
   array.forEach((e) => {
     let option = document.createElement("option");

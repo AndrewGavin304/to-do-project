@@ -1,7 +1,9 @@
 import { pubSub } from "./pubSub";
 import { v4 as uuidv4 } from "uuid";
 
-const list = [];
+const todoList = [];
+export const projectList = ["default"];
+
 export const createTodo = ({
   title = "Todo Item",
   description = undefined,
@@ -24,13 +26,18 @@ export const createTodo = ({
   uuid,
 });
 
-export function listen() {
-  pubSub.sub("todo", addToListArray);
+export function arrayListen() {
+  pubSub.sub("todo", addToTodoArray);
+  pubSub.sub("project", addToProjectArray);
 }
 
-function addToListArray(data) {
-  list.push(data);
-  console.log(list);
+function addToTodoArray(data) {
+  todoList.push(data);
+  console.log(todoList);
+}
+
+function addToProjectArray(data) {
+  projectList.push(data);
 }
 
 export function convertFormDataToObj() {

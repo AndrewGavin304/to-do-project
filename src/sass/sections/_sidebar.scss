@@ -16,3 +16,12 @@
         }
     }
 }
+
+.add-project-form {
+    &_hide {
+        display: none;
+    }
+    &_show {
+        display: flex;
+    }
+}
