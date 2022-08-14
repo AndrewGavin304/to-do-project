@@ -9,14 +9,16 @@ import { titleCase } from "title-case";
 let priorities = ["low", "medium", "high"];
 
 export function domListeners() {
-  _addListItemToDomListener();
+  _subscriptions();
   _clickSubmitTodoListener();
   _clickAddTodoListener();
   _clickAddToProjectListener();
   _clickSubmitProjectListener();
 
-  function _addListItemToDomListener() {
+  function _subscriptions() {
     pubSub.sub("todo", addListItemToDom);
+    pubSub.sub("project", addProjectInSidebar);
+    pubSub.sub("project", addProjectToDropdown);
   }
 
   function _clickSubmitTodoListener() {
@@ -57,10 +59,6 @@ export function domListeners() {
     let submit = document.getElementById("add-project-form__submit");
     submit.addEventListener("click", function (e) {
       pubSub.pub("project", getProjectName());
-      e.preventDefault();
-    });
-    submit.addEventListener("click", function (e) {
-      pubSub.sub("project", addProjectInSidebar);
       e.preventDefault();
     });
     submit.addEventListener("click", function (e) {
@@ -265,9 +263,9 @@ function _addTodoForm() {
   return form;
 }
 
-function getProjectName(data) {
+function getProjectName() {
   const input = document.getElementById("add-project-form__input");
-  const name = input.value;
+  const name = titleCase(input.value);
 
   return name;
 }
@@ -279,8 +277,17 @@ function addProjectInSidebar(data) {
     "sidebar_project-button",
     `sidebar__project-button_${data}`
   );
-  projectButton.textContent = titleCase(`${data}`);
+  projectButton.textContent = (`${data}`);
   projectDisplay.append(projectButton);
+}
+
+function addProjectToDropdown(data){
+  let select = document.getElementById("project");
+  let option = document.createElement("option");
+  option.value = paramCase(`${data}`);
+  option.text = `${data}`;
+  
+  select.append(option);
 }
 
 function _addProjectForm() {
