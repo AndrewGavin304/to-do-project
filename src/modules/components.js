@@ -10,18 +10,24 @@ export function createElement(type, className, id) {
   return element;
 }
 
-export function createSymbolButton(symbol, text, className, id) {
-  let button = createElement("button", `${className}`, `${id}`);
+export function createSymbolElement(elementType, symbol, text, className, id) {
+  let element = createElement(`${elementType}`, `${className}`);
 
-  let buttonSymbol = createElement("span", `${className}__symbol`);
-  buttonSymbol.classList.add("material-symbols-outlined");
-  buttonSymbol.textContent = `${symbol}`;
+  if (id == "r") {
+    element.setAttribute("id", `${className}`);
+  } else if (id) {
+    element.setAttribute("id", `${id}`);
+  }
 
-  let buttonText = createElement("span", `${className}__text`);
-  buttonText.textContent = `${text}`;
+  let elementSymbol = createElement("span", `${className}__symbol`);
+  elementSymbol.classList.add("material-symbols-outlined");
+  elementSymbol.textContent = `${symbol}`;
 
-  button.append(buttonSymbol);
-  button.append(buttonText);
+  let elementText = createElement("span", `${className}__text`);
+  elementText.textContent = `${text}`;
 
-  return button;
+  element.append(elementSymbol);
+  element.append(elementText);
+
+  return element;
 }

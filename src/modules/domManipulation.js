@@ -2,7 +2,7 @@ import { createTodo } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj, projectList } from "./todoController";
 import { format } from "date-fns";
-import { createElement, createSymbolButton } from "./components";
+import { createElement, createSymbolElement } from "./components";
 import { camelCase, noCase, paramCase } from "change-case";
 import { titleCase } from "title-case";
 
@@ -130,7 +130,8 @@ export function generateHomeLayout() {
     let sidebar = createElement("div", "sidebar", "r");
     let projectDisplay = createElement("div", "sidebar__project-display", "r");
 
-    let addProjectButton = createSymbolButton(
+    let addProjectButton = createSymbolElement(
+      "button",
       "add",
       "Add Project",
       "sidebar__add-project-btn_show",
@@ -148,7 +149,8 @@ export function generateHomeLayout() {
   function _content() {
     //content variable must be hoisted with var declaration
     var content = createElement("div", "content");
-    let todoBtn = createSymbolButton(
+    let todoBtn = createSymbolElement(
+      "button",
       "add",
       "Add Todo",
       "add-todo-btn_show",
@@ -177,23 +179,34 @@ function addListItemToDom(data) {
       if (key == "date" && value) {
         let unformattedDate = `${value}`;
         let formattedDate = format(new Date(unformattedDate), "MM/dd/yyyy");
-        console.log(formattedDate);
-        _generateListElement(`${key}`, formattedDate);
+        _generateListElement(`${key}`, formattedDate, "calendar_month");
+      } else if (key == "time" && value){
+        _generateListElement(`${key}`, `${value}`, "alarm");
       } else if (key == "priority") {
         itemDiv.classList.add(`list-item-container_priority_${value}`);
-      } else if (key == "uuid") {
+      } else if ((key == "uuid") || (key == "project")) {
       } else if (value) {
         _generateListElement(`${key}`, `${value}`);
       }
     }
 
-    function _generateListElement(key, value) {
-      let div = createElement("div", `list-item-${key}`);
-      let text = createElement("span", `list-item-${key}__text`);
-      text.textContent = `${value}`;
-
-      div.append(text);
-      itemDiv.append(div);
+    function _generateListElement(key, value, symbol) {
+      if (symbol) {
+        //functions appear substantially different because createSymbolElement is superset of createElement, consider refactor
+        let div = createSymbolElement(
+          "div",
+          `${symbol}`,
+          `${value}`,
+          `list-item-${key}`
+        );
+        itemDiv.append(div);
+      } else {
+        let div = createElement("div", `list-item-${key}`);
+        let content = createElement("span", `list-item-${key}__text`);
+        content.textContent = `${value}`;
+        div.append(content);
+        itemDiv.append(div);
+      }
     }
 
     return itemDiv;
@@ -203,7 +216,6 @@ function addListItemToDom(data) {
 function _addTodoForm() {
   let form = createElement("form", "add-todo-form_hide", "add-todo-form");
 
-  //used to generate form
   const templateTodo = createTodo();
   const { checked, uuid, ...strippedTodo } = templateTodo;
 
@@ -252,7 +264,8 @@ function _addTodoForm() {
     form.append(input);
   }
 
-  let submit = createSymbolButton(
+  let submit = createSymbolElement(
+    "button",
     "add",
     "Add Todo",
     "add-todo-form__submit_show",
@@ -277,16 +290,16 @@ function addProjectInSidebar(data) {
     "sidebar_project-button",
     `sidebar__project-button_${data}`
   );
-  projectButton.textContent = (`${data}`);
+  projectButton.textContent = `${data}`;
   projectDisplay.append(projectButton);
 }
 
-function addProjectToDropdown(data){
+function addProjectToDropdown(data) {
   let select = document.getElementById("project");
   let option = document.createElement("option");
   option.value = paramCase(`${data}`);
   option.text = `${data}`;
-  
+
   select.append(option);
 }
 
@@ -315,7 +328,6 @@ function _generateDropdownOptions(select, array) {
     if (option.value == "medium") {
       option.setAttribute("selected", "selected");
     }
-    console.log(select);
     select.append(option);
   });
 
