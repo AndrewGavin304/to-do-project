@@ -1,6 +1,7 @@
 body{
     background-color: $white;
     color: $secondary-darkest;
+    cursor: default;
 }
 
 ::-webkit-calendar-picker-indicator {

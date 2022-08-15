@@ -6,32 +6,11 @@
     &_show {
         display: grid;
         grid-template-columns: 1fr 3fr;
-        align-items: center;
-        padding: 1.25rem;
-        font-family: $header-font-family;
-        row-gap: .75rem;
-        border: 2px solid $accent-lighter;
-        border-radius: $base-border-radius-half;
-        background-color: $white;
-        box-shadow: rgba($accent-darker, 0.1) 0px 10px 15px -3px, rgba($accent-darker, 0.05) 0px 4px 6px -2px;
-        color: $accent-dark;
-        font-size: 1.25rem;
+        @include form-default;
     }
 
     &__input {
-        border: 2px solid $accent-lighter;
-        color: $accent;
-        border-radius: $base-border-radius-quarter;
-        background-color: $white;
-        padding: 4px;
-        font-family: $header-font-family;
-        font-weight: 300;
-        &:focus{
-            outline-color: $accent;
-        }
-        &:hover{
-            background-color: $tertiary-light;
-        }
+        @include input-default;
     }
 
     &__label {

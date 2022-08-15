@@ -56,7 +56,7 @@ export function domListeners() {
   }
 
   function _clickSubmitProjectListener() {
-    let submit = document.getElementById("add-project-form__submit");
+    let submit = document.getElementById("add-project-form__submit-btn");
     submit.addEventListener("click", function (e) {
       pubSub.pub("project", getProjectName());
       e.preventDefault();
@@ -171,22 +171,34 @@ function addListItemToDom(data) {
   listContainer.append(_generateDomListItem(data));
 
   function _generateDomListItem(data) {
-    let itemDiv = createElement("div", "list-item-container");
+    let itemUUID = data.uuid;
+    let itemDiv = createElement("div", "list-item-container", `list-item-container-${itemUUID}`);
 
     console.log(data);
 
     for (const [key, value] of Object.entries(data)) {
-      if (key == "date" && value) {
-        let unformattedDate = `${value}`;
-        let formattedDate = format(new Date(unformattedDate), "MM/dd/yyyy");
-        _generateListElement(`${key}`, formattedDate, "calendar_month");
+      if (key == "date") {
+        if (value){
+          let unformattedDate = `${value}`;
+          let formattedDate = format(new Date(unformattedDate), "MM/dd/yyyy");
+          var dateAndTimeDiv = (createElement("div", "list-item-date-and-time", `list-item-date-and-time-${itemUUID}`));
+          let dateDiv = (_generateListElement(`${key}-and-time_date`, formattedDate, "calendar_month"))
+          dateAndTimeDiv.append(dateDiv);
+          itemDiv.append(dateAndTimeDiv);
+        }
+        else {
+          var dateAndTimeDiv = (_generateListElement(`${key}-and-time`, ''))
+          itemDiv.append(dateAndTimeDiv);
+        }
       } else if (key == "time" && value){
-        _generateListElement(`${key}`, `${value}`, "alarm");
+        dateAndTimeDiv.append(_generateListElement(`date-and-time_${key}`, `${value}`, "alarm"));
       } else if (key == "priority") {
         itemDiv.classList.add(`list-item-container_priority_${value}`);
-      } else if ((key == "uuid") || (key == "project")) {
+      } else if (key == "project"){
+        itemDiv.append(_generateListElement(`${key}`, `${value}`));
+      } else if (key == "uuid"){
       } else if (value) {
-        _generateListElement(`${key}`, `${value}`);
+        itemDiv.append(_generateListElement(`${key}`, `${value}`));
       }
     }
 
@@ -197,21 +209,25 @@ function addListItemToDom(data) {
           "div",
           `${symbol}`,
           `${value}`,
-          `list-item-${key}`
+          `list-item-${key}`,
+          `list-item-${key}-${itemUUID}`
         );
-        itemDiv.append(div);
+        return div;
       } else {
-        let div = createElement("div", `list-item-${key}`);
+        let div = createElement("div", `list-item-${key}`, `list-item-${key}-${itemUUID}`);
         let content = createElement("span", `list-item-${key}__text`);
         content.textContent = `${value}`;
         div.append(content);
-        itemDiv.append(div);
+        return div;
       }
     }
+
+    itemDiv.append(createElement("div", "list-item-container__divider"));
 
     return itemDiv;
   }
 }
+
 
 function _addTodoForm() {
   let form = createElement("form", "add-todo-form_hide", "add-todo-form");
@@ -287,7 +303,7 @@ function addProjectInSidebar(data) {
   let projectDisplay = document.getElementById("sidebar__project-display");
   let projectButton = createElement(
     "button",
-    "sidebar_project-button",
+    "sidebar__project-button",
     `sidebar__project-button_${data}`
   );
   projectButton.textContent = `${data}`;
@@ -305,15 +321,12 @@ function addProjectToDropdown(data) {
 
 function _addProjectForm() {
   let form = createElement("form", "add-project-form_hide", "add-project-form");
-  let label = createElement("label", "add-project-form__label");
+  // let label = createElement("label", "add-project-form__label");
+  // label.textContent = "Project Name";
   let input = createElement("input", "add-project-form__input", "r");
-  let projectSubmit = createElement(
-    "button",
-    "add-project-form__submit-btn",
-    "add-project-form__submit"
-  );
+  let projectSubmit = createSymbolElement("button", "add", "Add Project", "add-project-form__submit-btn", "r")
 
-  form.append(label);
+  // form.append(label);
   form.append(input);
   form.append(projectSubmit);
   return form;

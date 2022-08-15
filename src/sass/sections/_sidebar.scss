@@ -15,6 +15,19 @@
             display: none;
         }
     }
+
+    &__project-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    &__project-button {
+        @include project-label;
+        width: 65%;
+    }
 }
 
 .add-project-form {
@@ -22,6 +35,21 @@
         display: none;
     }
     &_show {
+        @include form-default;
+        background-color: $white-dark;
         display: flex;
+        flex-direction: column;
+        width: 80%;
+        margin: 1rem auto 1rem auto;
+        padding: .4rem;
+    }
+    &__submit-btn {
+        @include add-button;
+        font-size: 1rem;
+        margin: 0;
+    }
+    &__input {
+        @include input-default;
+        width: 80%;
     }
 }
