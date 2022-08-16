@@ -1,4 +1,4 @@
-import { createTodo } from "./todoController";
+import { createTodo, addToTodoArray, todoList } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj, projectList } from "./todoController";
 import { format } from "date-fns";
@@ -14,9 +14,11 @@ export function domListeners() {
   _clickAddTodoListener();
   _clickAddToProjectListener();
   _clickSubmitProjectListener();
+  _searchbarListener();
 
   function _subscriptions() {
     pubSub.sub("todo", addListItemToDom);
+    pubSub.sub("todo", addToTodoArray);
     pubSub.sub("project", addProjectInSidebar);
     pubSub.sub("project", addProjectToDropdown);
   }
@@ -68,6 +70,11 @@ export function domListeners() {
       _toggleElement("sidebar__add-project-btn");
     });
   }
+
+  function _searchbarListener() {
+    let searchbarInput = document.getElementById("searchbar__input");
+    searchbarInput.addEventListener("keyup", _search);
+  }
 }
 
 export function generateHomeLayout() {
@@ -116,12 +123,14 @@ export function generateHomeLayout() {
       let searchbarInput = createElement("input", "searchbar__input", "r");
       searchbarInput.setAttribute("type", "search");
       searchbarInput.setAttribute("autocomplete", "off");
+      // searchbarInput.setAttribute("onkeyup", '_search()');
 
       let searchbarIcon = createElement("span", "material-symbols-outlined");
       searchbarIcon.textContent = "search";
 
       searchbar.append(searchbarIcon);
       searchbar.append(searchbarInput);
+
       return searchbar;
     }
   }
@@ -358,3 +367,38 @@ function _toggleElement(id) {
     element.classList.add(`${id}_show`);
   }
 }
+
+
+function _search() {
+  let input = document.getElementById("searchbar__input").value;
+  let todoArray = todoList;
+  let results = todoArray.filter(itemObject => {
+    let { checked, uuid, date, ...strippedItemObject } = itemObject;
+    console.log(strippedItemObject)
+    let strippedObjectValueArray = Object.values(strippedItemObject);
+    let matches = strippedObjectValueArray.filter(e => {
+      if (e) {
+        if (e.includes(input)) {
+          return true;
+        }
+      }
+    })
+    if (matches.length > 0) {
+      return true;
+    }
+  })
+
+  let todoObjectsNodeList = document.querySelectorAll(".list-item-container");
+  let todoObjectsArray = [...todoObjectsNodeList];
+  todoObjectsArray.forEach(div => {
+    div.style.display = "none";
+  });
+  
+
+  results.forEach(todoObj => {
+    let objUUID = todoObj.uuid;
+    let objDisplay = document.getElementById(`list-item-container-${objUUID}`);
+    objDisplay.style.display = "grid";
+  })
+}
+

@@ -1,7 +1,7 @@
 import { pubSub } from "./pubSub";
 import { v4 as uuidv4 } from "uuid";
 
-const todoList = [];
+export const todoList = [];
 export const projectList = ["default"];
 
 export const createTodo = ({
@@ -31,9 +31,10 @@ export function arrayListen() {
   pubSub.sub("project", addToProjectArray);
 }
 
-function addToTodoArray(data) {
+export function addToTodoArray(data) {
   todoList.push(data);
   console.log(todoList);
+  return todoList;
 }
 
 function addToProjectArray(data) {
