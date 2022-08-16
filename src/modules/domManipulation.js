@@ -1,4 +1,4 @@
-import { createTodo, addToTodoArray, todoList } from "./todoController";
+import { createTodo, addToTodoArray, addToProjectArray, todoList } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj, projectList } from "./todoController";
 import { format } from "date-fns";
@@ -15,10 +15,12 @@ export function domListeners() {
   _clickAddToProjectListener();
   _clickSubmitProjectListener();
   _searchbarListener();
+  _projectBtnListener();
 
   function _subscriptions() {
     pubSub.sub("todo", addListItemToDom);
     pubSub.sub("todo", addToTodoArray);
+    pubSub.sub("project", addToProjectArray);
     pubSub.sub("project", addProjectInSidebar);
     pubSub.sub("project", addProjectToDropdown);
   }
@@ -73,8 +75,25 @@ export function domListeners() {
 
   function _searchbarListener() {
     let searchbarInput = document.getElementById("searchbar__input");
-    searchbarInput.addEventListener("keyup", _search);
+    searchbarInput.addEventListener("keyup", function(event) {_search(searchbarInput)});
   }
+
+  function _projectBtnListener() {
+    let projectContainer = document.querySelector('#sidebar__project-display');
+    projectContainer.addEventListener("click", (event) => {
+      let target = event.target;
+      if (target.nodeName === 'BUTTON') {
+        _search(target);
+      }
+    })
+  }
+  // function _projectBtnListener() {
+  //   querySelectorAll projectbtns;
+  //   for each project btn;
+  //     let project name = innertext of project btn;
+
+    
+  // }
 }
 
 export function generateHomeLayout() {
@@ -138,6 +157,8 @@ export function generateHomeLayout() {
   function _sidebar() {
     let sidebar = createElement("div", "sidebar", "r");
     let projectDisplay = createElement("div", "sidebar__project-display", "r");
+    let showAllButton = createElement("button", "sidebar__show-all-button", "sidebar__project-button_show-all");
+    showAllButton.innerText = "Show All"
 
     let addProjectButton = createSymbolElement(
       "button",
@@ -149,6 +170,7 @@ export function generateHomeLayout() {
 
     let addProjectForm = _addProjectForm();
 
+    projectDisplay.append(showAllButton);
     sidebar.append(projectDisplay);
     sidebar.append(addProjectButton);
     sidebar.append(addProjectForm);
@@ -204,7 +226,7 @@ function addListItemToDom(data) {
       } else if (key == "priority") {
         itemDiv.classList.add(`list-item-container_priority_${value}`);
       } else if (key == "project"){
-        itemDiv.append(_generateListElement(`${key}`, `${value}`));
+        itemDiv.append(_generateListElement(`${key}`, titleCase(`${value}`)));
       } else if (key == "uuid"){
       } else if (value) {
         itemDiv.append(_generateListElement(`${key}`, `${value}`));
@@ -315,7 +337,7 @@ function addProjectInSidebar(data) {
     "sidebar__project-button",
     `sidebar__project-button_${data}`
   );
-  projectButton.textContent = `${data}`;
+  projectButton.textContent = titleCase(`${data}`);
   projectDisplay.append(projectButton);
 }
 
@@ -323,7 +345,7 @@ function addProjectToDropdown(data) {
   let select = document.getElementById("project");
   let option = document.createElement("option");
   option.value = paramCase(`${data}`);
-  option.text = `${data}`;
+  option.text = titleCase(`${data}`);
 
   select.append(option);
 }
@@ -369,34 +391,52 @@ function _toggleElement(id) {
 }
 
 
-function _search() {
-  let input = document.getElementById("searchbar__input").value;
-  let todoArray = todoList;
-  let results = todoArray.filter(itemObject => {
-    let { checked, uuid, ...strippedItemObject } = itemObject;
-    let strippedObjectValueArray = Object.values(strippedItemObject);
-    let matches = strippedObjectValueArray.filter(e => {
-      if (e) {
-        if (e.includes(input)) {
-          return true;
-        }
-      }
-    })
-    if (matches.length > 0) {
-      return true;
-    }
-  })
-
+function _search(input) {
+  let textInput = ''
   let todoObjectsNodeList = document.querySelectorAll(".list-item-container");
   let todoObjectsArray = [...todoObjectsNodeList];
-  todoObjectsArray.forEach(div => {
-    div.style.display = "none";
-  });
 
-  results.forEach(todoObj => {
-    let objUUID = todoObj.uuid;
-    let objDisplay = document.getElementById(`list-item-container-${objUUID}`);
-    objDisplay.style.display = "grid";
-  })
+  if (input.tagName.toLowerCase() == "input") {
+    textInput = input.value.toLowerCase();
+  }
+  if (input.tagName.toLowerCase() == "button") {
+    textInput = input.innerText.toLowerCase();
+  }
+
+  if (textInput.toLowerCase() == "show all"){
+    todoObjectsArray.forEach(div => {
+      div.style.display = "grid";
+    })
+  }
+
+  else {
+    let todoArray = todoList;
+
+    let results = todoArray.filter(itemObject => {
+      let { checked, uuid, ...strippedItemObject } = itemObject;
+      let strippedObjectValueArray = Object.values(strippedItemObject);
+      let matches = strippedObjectValueArray.filter(e => {
+        if (e) {
+          if (e.includes(textInput)) {
+            return true;
+          }
+        }
+      })
+      if (matches.length > 0) {
+        return true;
+      }
+    })
+
+    todoObjectsArray.forEach(div => {
+      div.style.display = "none";
+    })
+
+
+    results.forEach(todoObj => {
+      let objUUID = todoObj.uuid;
+      let objDisplay = document.getElementById(`list-item-container-${objUUID}`);
+      objDisplay.style.display = "grid";
+    })
+  }
 }
 
