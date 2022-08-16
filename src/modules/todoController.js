@@ -49,8 +49,14 @@ export function convertFormDataToObj() {
   let todoObj = createTodo();
 
   inputs.forEach((input) => {
+    console.log(input);
     if (input.value) {
-      todoObj[input.id] = input.value;
+      if (input.key == 'date') {
+        todoObj[input.id] = format(new Date(input.value), "MM/dd/yyyy");
+      }
+      else {
+        todoObj[input.id] = input.value;
+      }
     }
   });
 

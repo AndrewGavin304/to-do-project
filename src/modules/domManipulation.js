@@ -373,8 +373,7 @@ function _search() {
   let input = document.getElementById("searchbar__input").value;
   let todoArray = todoList;
   let results = todoArray.filter(itemObject => {
-    let { checked, uuid, date, ...strippedItemObject } = itemObject;
-    console.log(strippedItemObject)
+    let { checked, uuid, ...strippedItemObject } = itemObject;
     let strippedObjectValueArray = Object.values(strippedItemObject);
     let matches = strippedObjectValueArray.filter(e => {
       if (e) {
@@ -393,7 +392,6 @@ function _search() {
   todoObjectsArray.forEach(div => {
     div.style.display = "none";
   });
-  
 
   results.forEach(todoObj => {
     let objUUID = todoObj.uuid;
