@@ -17,3 +17,7 @@ select {
     border-radius: $base-border-radius-half;
     color: $accent;
 }
+
+span {
+    pointer-events: none;
+}
