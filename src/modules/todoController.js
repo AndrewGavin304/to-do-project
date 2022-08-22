@@ -2,7 +2,7 @@ import { pubSub } from "./pubSub";
 import { v4 as uuidv4 } from "uuid";
 
 export let todoList = [];
-export const projectList = [];
+export let projectList = [];
 
 export const createTodo = ({
   title = "Todo Item",
@@ -34,6 +34,10 @@ export function addToTodoArray(data) {
 export function removeToDo(uuid){
   todoList = todoList.filter(function(e) {return e.uuid != uuid});
   console.log(todoList);
+}
+
+export function removeProject(projectName){
+  projectList = projectList.filter(function(e) {return e.project != projectName});
 }
 
 export function addToProjectArray(data) {

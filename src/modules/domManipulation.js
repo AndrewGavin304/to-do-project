@@ -4,6 +4,7 @@ import {
   addToProjectArray,
   todoList,
   removeToDo,
+  removeProject
 } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj, projectList } from "./todoController";
@@ -23,6 +24,7 @@ export function domListeners() {
   _searchbarListener();
   _projectBtnListener();
   _removeBtnListener();
+  _removeProjectListener();
 
   function _subscriptions() {
     pubSub.sub("todo", addListItemToDom);
@@ -91,7 +93,10 @@ export function domListeners() {
     let projectContainer = document.querySelector("#sidebar__project-display");
     projectContainer.addEventListener("click", (event) => {
       let target = event.target;
-      if (target.nodeName === "BUTTON") {
+      if (
+        target.className === "sidebar__project-button" ||
+        target.className === "sidebar__show-all-button"
+      ) {
         _search(target);
       }
     });
@@ -108,6 +113,25 @@ export function domListeners() {
         removeToDo(itemUUID);
       }
     });
+  }
+
+  function _removeProjectListener() {
+    let projectContainer = document.querySelector("#sidebar__project-display");
+    projectContainer.addEventListener("click", (e) => {
+      let target = e.target;
+      if (target.className == 'project-container__remove-project-btn'){
+        let unparsedClassNameStr = e.target.id;
+        let projectName = unparsedClassNameStr.replace('project-container__remove-project-btn_', '');
+        // removeProject(projectName);
+        // target.parentNode.remove();
+        // removeProjectInDropdown(projectName);
+        if (confirm(`Are you sure you want to remove the ${projectName} project?  This will remove all projects with the ${projectName} label!`)){
+          removeProject(projectName);
+          target.parentNode.remove();
+          removeProjectInDropdown(projectName);
+        }
+      }
+    })
   }
 }
 
@@ -374,13 +398,28 @@ function getProjectName() {
 
 function addProjectInSidebar(data) {
   let projectDisplay = document.getElementById("sidebar__project-display");
+  let projectNameParam = paramCase(`${data}`);
+  // let projectDiv = document.createElement("div", "project-container", `sidebar__project-container_${data}`);
+  let projectDiv = createElement('div', 'project-container', `sidebar__project-container_${projectNameParam}`);
   let projectButton = createElement(
     "button",
-    "sidebar__project-button",
-    `sidebar__project-button_${data}`
+    "project-container__project-button",
+    `project-container__project-button_${projectNameParam}`
   );
+
+  let removeProjectButton = createSymbolElement(
+    "button",
+    "close",
+    "",
+    "project-container__remove-project-btn",
+    `project-container__remove-project-btn_${projectNameParam}`
+  );
+
   projectButton.textContent = titleCase(`${data}`);
-  projectDisplay.append(projectButton);
+  // projectDisplay.append(projectButton);
+  projectDiv.append(projectButton);
+  projectDiv.append(removeProjectButton);
+  projectDisplay.append(projectDiv);
 }
 
 function addProjectToDropdown(data) {
@@ -390,6 +429,12 @@ function addProjectToDropdown(data) {
   option.text = titleCase(`${data}`);
 
   select.append(option);
+}
+
+function removeProjectInDropdown(data) {
+  let select = document.getElementById("project");
+  console.log(select);
+  select.removeChild(select.querySelector(`option[value='${data}']`));
 }
 
 function _addProjectForm() {
@@ -439,6 +484,7 @@ function _search(input) {
   let textInput = "";
   let todoObjectsNodeList = document.querySelectorAll(".list-item-container");
   let todoObjectsArray = [...todoObjectsNodeList];
+  console.log(input.tagName);
 
   if (input.tagName.toLowerCase() == "input") {
     textInput = input.value.toLowerCase();

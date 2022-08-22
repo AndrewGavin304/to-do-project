@@ -22,6 +22,25 @@
     }
 }
 
+@mixin remove-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $base-border-radius-half;
+    color: $white;
+    background-color: $accent-darker;
+    border: none;
+    height: 24px;
+    width: 24px;
+    padding: 0px;
+    margin: 0;
+    align-self: flex-start;
+    justify-self: flex-start;
+    margin-left: auto;
+    font-size: 1.1rem;
+    transition: .2s;
+}
+
 @mixin input-default {
     border: 2px solid $accent-lighter;
     color: $accent;
@@ -62,7 +81,6 @@
     transition: .2s;
     box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
     border: none;
-    //border: 1px solid $accent-light;
 
     &:hover {
         background-color: $accent-light;

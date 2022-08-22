@@ -132,17 +132,7 @@
     }
 
     &__remove {
-        @include add-button;
-        color: $white;
-        background-color: $accent-darker;
-        border: none;
-        height: 24px;
-        width: 24px;
-        padding: 0px;
-        margin: 0;
-        align-self: flex-start;
-        justify-self: flex-start;
-        margin-left: auto;
+        @include remove-button;
 
         &:hover {
             background-color: $accent-darkest;
