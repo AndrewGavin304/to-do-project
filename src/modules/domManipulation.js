@@ -5,7 +5,7 @@ import {
   todoList,
   removeToDo,
   removeProject,
-  removeTodoByProject
+  removeTodoByProject,
 } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj, projectList } from "./todoController";
@@ -120,23 +120,29 @@ export function domListeners() {
     let projectContainer = document.querySelector("#sidebar__project-display");
     projectContainer.addEventListener("click", (e) => {
       let target = e.target;
-      if (target.className == 'project-container__remove-project-btn'){
-
+      if (target.className == "project-container__remove-project-btn") {
         let unparsedClassNameStr = e.target.id;
-        let projectNameParamCase = unparsedClassNameStr.replace('project-container__remove-project-btn_', '');
-        
+        let projectNameParamCase = unparsedClassNameStr.replace(
+          "project-container__remove-project-btn_",
+          ""
+        );
+
         let projectNameNoCase = noCase(projectNameParamCase);
         let projectNameTitleCase = titleCase(projectNameNoCase);
 
         console.log(projectNameTitleCase);
-        if (confirm(`Are you sure you want to remove the ${projectNameTitleCase} project?  This will remove all projects with the ${projectNameTitleCase} label!`)){
+        if (
+          confirm(
+            `Are you sure you want to remove the ${projectNameTitleCase} project?  This will remove all projects with the ${projectNameTitleCase} label!`
+          )
+        ) {
           removeProject(projectNameNoCase);
           target.parentNode.remove();
           removeProjectInDropdown(projectNameParamCase);
           removeTodoByProject(projectNameNoCase);
         }
       }
-    })
+    });
   }
 }
 
@@ -405,7 +411,11 @@ function addProjectInSidebar(data) {
   let projectDisplay = document.getElementById("sidebar__project-display");
   let projectNameParam = paramCase(`${data}`);
   // let projectDiv = document.createElement("div", "project-container", `sidebar__project-container_${data}`);
-  let projectDiv = createElement('div', 'project-container', `sidebar__project-container_${projectNameParam}`);
+  let projectDiv = createElement(
+    "div",
+    "project-container",
+    `sidebar__project-container_${projectNameParam}`
+  );
   let projectButton = createElement(
     "button",
     "project-container__project-button",
