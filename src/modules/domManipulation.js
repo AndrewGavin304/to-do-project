@@ -4,7 +4,8 @@ import {
   addToProjectArray,
   todoList,
   removeToDo,
-  removeProject
+  removeProject,
+  removeTodoByProject
 } from "./todoController";
 import { pubSub } from "./pubSub";
 import { convertFormDataToObj, projectList } from "./todoController";
@@ -94,8 +95,8 @@ export function domListeners() {
     projectContainer.addEventListener("click", (event) => {
       let target = event.target;
       if (
-        target.className === "sidebar__project-button" ||
-        target.className === "sidebar__show-all-button"
+        target.className === "sidebar__show-all-button" ||
+        target.className === "project-container__project-button"
       ) {
         _search(target);
       }
@@ -120,15 +121,19 @@ export function domListeners() {
     projectContainer.addEventListener("click", (e) => {
       let target = e.target;
       if (target.className == 'project-container__remove-project-btn'){
+
         let unparsedClassNameStr = e.target.id;
-        let projectName = unparsedClassNameStr.replace('project-container__remove-project-btn_', '');
-        // removeProject(projectName);
-        // target.parentNode.remove();
-        // removeProjectInDropdown(projectName);
-        if (confirm(`Are you sure you want to remove the ${projectName} project?  This will remove all projects with the ${projectName} label!`)){
-          removeProject(projectName);
+        let projectNameParamCase = unparsedClassNameStr.replace('project-container__remove-project-btn_', '');
+        
+        let projectNameNoCase = noCase(projectNameParamCase);
+        let projectNameTitleCase = titleCase(projectNameNoCase);
+
+        console.log(projectNameTitleCase);
+        if (confirm(`Are you sure you want to remove the ${projectNameTitleCase} project?  This will remove all projects with the ${projectNameTitleCase} label!`)){
+          removeProject(projectNameNoCase);
           target.parentNode.remove();
-          removeProjectInDropdown(projectName);
+          removeProjectInDropdown(projectNameParamCase);
+          removeTodoByProject(projectNameNoCase);
         }
       }
     })

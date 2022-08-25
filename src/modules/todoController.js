@@ -40,6 +40,11 @@ export function removeProject(projectName){
   projectList = projectList.filter(function(e) {return e.project != projectName});
 }
 
+export function removeTodoByProject(projectName) {
+  todoList = todoList.filter(function(todoObject) {return todoObject.project != projectName});
+  console.log(todoList);
+}
+
 export function addToProjectArray(data) {
   console.log(projectList)
   data = data.toLowerCase();
